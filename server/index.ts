@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import connectDB from './config/database';
+import connectDB from '@config/database';
 const app = express();
 require('dotenv').config();
 
