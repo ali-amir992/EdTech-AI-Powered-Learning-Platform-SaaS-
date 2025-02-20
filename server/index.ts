@@ -3,6 +3,9 @@ import connectDB from '@config/database';
 import userRoutes from '@routes/userRoutes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import cloudinaryConnect from '@config/cloudinary'
+import fileUpload from 'express-fileupload';
+
 
 const app = express();
 require('dotenv').config();
@@ -15,8 +18,15 @@ app.use(
   cors({
     origin: "*",
     credentials: true
+  })  
+)
+app.use(
+  fileUpload({
+      useTempFiles:true,
+      tempFileDir:"/tmp"
   })
 )
+cloudinaryConnect();
 
 connectDB();
 

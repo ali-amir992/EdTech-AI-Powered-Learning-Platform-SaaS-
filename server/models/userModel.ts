@@ -9,6 +9,10 @@ export interface IUser extends Document {
   dateOfBirth: Date;
   role: "Student" | "Instructor" | "Admin";
   courses: mongoose.Types.ObjectId[];
+  image: string,
+  phone: string,
+  gender: string,
+  about: string,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,6 +36,24 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ["Student", "Instructor", "Admin"],
       required: true,
+    },
+    image: {
+      type: String
+    },
+
+    gender: {
+      type: String,
+    },
+    about: {
+      type: String,
+      trim: true,
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    phone: {
+      type: String,
+      trim: true,
     },
 
     courses: [
