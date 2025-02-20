@@ -1,55 +1,42 @@
 import { useDispatch } from 'react-redux'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import { ACCOUNT_TYPE } from '@utils/constant'
 import { toast } from 'react-hot-toast'
 import { sendOTP } from '@services/operations/authAPI'
 import { setSignupData } from "@redux/slices/authSlice"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { useState } from 'react'
+
+type FormValues = {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    role: string;
+};
 
 const SignupForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        role: ACCOUNT_TYPE.STUDENT,  // Moved inside formData
-    })
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<FormValues>()
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const { name, email, password, confirmPassword, role } = formData
+    const password = watch("password")
+    // const confirmPassword = watch("confirmPassword")
 
-    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = event.target
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }))
-    }
-
-    const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        if (password !== confirmPassword) {
+    const onSubmit = (data: FormValues) => {
+        if (data.password !== data.confirmPassword) {
             toast.error("Passwords do not match")
             return
         }
 
-        dispatch(setSignupData(formData))
-        dispatch(sendOTP(formData.email, navigate) as any)
+        dispatch(setSignupData(data))
+        dispatch(sendOTP(data.email, navigate) as any)
 
-        setFormData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            role: ACCOUNT_TYPE.STUDENT,  // Reset with the rest of the form
-        })
+        reset()
     }
 
     return (
@@ -58,52 +45,52 @@ const SignupForm = () => {
                 <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Sign Up</h1>
 
                 {/* Form */}
-                <form onSubmit={handleOnSubmit} className="mt-6 space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
                     <div className="grid grid-cols-1 gap-6">
-                        {/* name Field */}
+                        {/* Name Field */}
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">name</label>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                             <input
+                                {...register("name", { required: "Name is required" })}
                                 type="text"
-                                name="name"
                                 id="name"
-                                value={name}
-                                onChange={handleOnChange}
                                 placeholder="Enter name"
                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required
                             />
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                         </div>
 
                         {/* Email Field */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
                             <input
+                                {...register("email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                        message: "Invalid email format"
+                                    }
+                                })}
                                 type="email"
-                                name="email"
                                 id="email"
-                                value={email}
-                                onChange={handleOnChange}
                                 placeholder="Enter email address"
                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required
                             />
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                         </div>
 
                         {/* Account Type Dropdown */}
                         <div>
-                            <label htmlFor="role" className="block text-sm font-medium text-gray-700"> Role</label>
+                            <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
                             <select
-                                name="role"
+                                {...register("role", { required: "Role is required" })}
                                 id="role"
-                                value={role}
-                                onChange={handleOnChange}
                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required
                             >
                                 <option value={ACCOUNT_TYPE.STUDENT}>Student</option>
                                 <option value={ACCOUNT_TYPE.INSTRUCTOR}>Instructor</option>
                             </select>
+                            {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
                         </div>
 
                         {/* Password Field */}
@@ -111,14 +98,17 @@ const SignupForm = () => {
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Create Password</label>
                             <div className="relative">
                                 <input
+                                    {...register("password", {
+                                        required: "Password is required",
+                                        minLength: {
+                                            value: 6,
+                                            message: "Password must be at least 6 characters"
+                                        }
+                                    })}
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
                                     id="password"
-                                    value={password}
-                                    onChange={handleOnChange}
                                     placeholder="Enter password"
                                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    required
                                 />
                                 <button
                                     type="button"
@@ -128,6 +118,7 @@ const SignupForm = () => {
                                     {showPassword ? <AiOutlineEyeInvisible className="h-5 w-5 text-gray-400" /> : <AiOutlineEye className="h-5 w-5 text-gray-400" />}
                                 </button>
                             </div>
+                            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                         </div>
 
                         {/* Confirm Password Field */}
@@ -135,14 +126,14 @@ const SignupForm = () => {
                             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
                             <div className="relative">
                                 <input
+                                    {...register("confirmPassword", {
+                                        required: "Confirm Password is required",
+                                        validate: value => value === password || "Passwords do not match"
+                                    })}
                                     type={showConfirmPassword ? "text" : "password"}
-                                    name="confirmPassword"
                                     id="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={handleOnChange}
                                     placeholder="Confirm password"
                                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    required
                                 />
                                 <button
                                     type="button"
@@ -152,6 +143,7 @@ const SignupForm = () => {
                                     {showConfirmPassword ? <AiOutlineEyeInvisible className="h-5 w-5 text-gray-400" /> : <AiOutlineEye className="h-5 w-5 text-gray-400" />}
                                 </button>
                             </div>
+                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
                         </div>
                     </div>
 
