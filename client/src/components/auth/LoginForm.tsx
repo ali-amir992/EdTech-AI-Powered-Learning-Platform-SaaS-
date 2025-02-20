@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { useAppDispatch } from "@redux/hooks"; // Correctly typed dispatch
+import  { useState } from "react";
+import { useAppDispatch } from "@redux/hooks/useAppDispatch";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { login } from "@services/operations/authAPI";
+import { RootState } from "@redux/store";
+import Spinner from "@components/common/Spinner";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type LoginFormInputs = {
@@ -10,9 +13,10 @@ type LoginFormInputs = {
   password: string;
 };
 
-const LoginForm: React.FC = () => {
+const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch(); // ✅ Use correctly typed dispatch
+  const dispatch = useAppDispatch();
+  const { loading } = useSelector((state: RootState) => state.auth);
   const {
     register,
     handleSubmit,
@@ -31,53 +35,116 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex w-full flex-col gap-y-4">
-      <label className="w-full">
-        <div className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-          Email Address <sup className="text-pink-200">*</sup>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 py-12">
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Spinner />
         </div>
-        <input
-          type="email"
-          placeholder="Enter email address"
-          {...register("email", { required: "Email is required" })}
-          style={{ boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)" }}
-          className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-      </label>
+      ) : (
+        <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8 transform transition-all duration-300 hover:shadow-xl">
+          {/* Title and Descriptions */}
+          <h1 className="text-3xl font-semibold text-center text-gray-900 mb-4 tracking-tight">
+            Join the millions learning to code with MetaDots
+          </h1>
+          <p className="text-sm text-gray-600 text-center mb-2">
+            Build skills for today, tomorrow, and beyond.
+          </p>
+          <p className="text-sm text-gray-600 text-center mb-8">
+            Education to future-proof your career.
+          </p>
 
-      <label className="relative w-full">
-        <div className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-          Password <sup className="text-pink-200">*</sup>
+          {/* Login Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                {...register("email", { required: "Email is required" })}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 placeholder-gray-400 text-gray-800"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1 font-medium animate-pulse">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Enter your password"
+                  {...register("password", { required: "Password is required" })}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 placeholder-gray-400 text-gray-800"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible className="h-5 w-5" />
+                  ) : (
+                    <AiOutlineEye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1 font-medium animate-pulse">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <Link
+                to="/forgot-password"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors duration-200"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 px-4 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300"
+            >
+              Sign In
+            </button>
+          </form>
+
+          {/* Sign Up Link */}
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-700 transition-colors duration-200"
+            >
+              Sign Up
+            </Link>
+          </p>
         </div>
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder="Enter the Password"
-          {...register("password", { required: "Password is required" })}
-          style={{ boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)" }}
-          className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
-        />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-        <span
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-3 top-[38px] z-[10] cursor-pointer text-richblack-5 opacity-80 text-[24px]"
-        >
-          {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-        </span>
-      </label>
-
-      <Link to="/forgot-password">
-        <p className="mt-1 ml-auto max-w-max text-sm text-blue-100">Forgot Password</p>
-      </Link>
-
-      <button
-        type="submit"
-        className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900"
-      >
-        Sign In
-      </button>
-    </form>
+      )}
+    </div>
   );
 };
 
-export default LoginForm;
+export default Login;
