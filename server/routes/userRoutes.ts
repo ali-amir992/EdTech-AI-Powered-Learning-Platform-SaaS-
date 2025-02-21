@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { login, signup, sendOTP } from "@controllers/authController";
 import { isAuthenticated, isStudent, isAdmin, isInstructor } from "@middlewares/authMiddleware";
+import { updateAvatar } from "@controllers/profileController";
 const router = Router();
 
 
@@ -29,6 +30,7 @@ router.get("/admin-dashboard", isAuthenticated, isAdmin, (req, res) => {
     res.json({ message: "Welcome Admin!" });
 });
 
+router.put("/updateAvatar" , isAuthenticated , updateAvatar);
 
 
 export default router;
