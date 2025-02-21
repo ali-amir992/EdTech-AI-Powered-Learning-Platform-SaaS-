@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/common/Spinner";
 import OTPInput from "react-otp-input";
@@ -12,10 +13,23 @@ const VerifyEmail: React.FC = () => {
     const { signupData, loading } = useSelector((state: RootState) => state.auth);
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const [otp, setOtp] = useState<string>("");
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    // react-hook-form setup
+    const { handleSubmit, setValue, watch } = useForm<{ otp: string }>({
+        defaultValues: { otp: "" },
+    });
+
+    const otp = watch("otp"); // Get OTP value
+
+    // Redirect if no signup data is found
+    useEffect(() => {
+        if (!signupData) {
+            navigate("/signup");
+        }
+    }, [signupData, navigate]);
+
+    // Handle OTP form submission
+    const onSubmit = (data: { otp: string }) => {
         if (!signupData) return;
 
         const { name, email, password, confirmPassword, role } = signupData;
@@ -27,17 +41,11 @@ const VerifyEmail: React.FC = () => {
                 email,
                 password,
                 confirmPassword,
-                otp,
+                otp: data.otp,
                 navigate,
             })
         );
     };
-
-    useEffect(() => {
-        if (!signupData) {
-            navigate("/signup");
-        }
-    }, [signupData, navigate]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 py-8">
@@ -51,11 +59,11 @@ const VerifyEmail: React.FC = () => {
                         A verification code has been sent to you. Enter the code below.
                     </p>
 
-                    <form onSubmit={submitHandler} className="space-y-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="flex justify-center">
                             <OTPInput
                                 value={otp}
-                                onChange={setOtp}
+                                onChange={(value) => setValue("otp", value)}
                                 numInputs={6}
                                 renderInput={(props) => (
                                     <input
@@ -87,7 +95,7 @@ const VerifyEmail: React.FC = () => {
 
                         <button
                             onClick={() => {
-                                if (signupData && signupData.email) {
+                                if (signupData?.email) {
                                     dispatch(sendOTP(signupData.email, navigate));
                                 }
                             }}

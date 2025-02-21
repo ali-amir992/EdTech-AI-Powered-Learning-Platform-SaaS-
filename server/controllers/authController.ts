@@ -45,16 +45,8 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         const { name, email, password, confirmPassword, role, otp } = req.body;
 
         if (!name || !email || !password || !confirmPassword || !role || !otp) {
-            const missingFields = [];
-            if (!name) missingFields.push("name");
-            if (!email) missingFields.push("email");
-            if (!password) missingFields.push("password");
-            if (!confirmPassword) missingFields.push("confirmPassword");
-            if (!role) missingFields.push("role");
-            if (!otp) missingFields.push("otp");
-        
-            console.log("Missing fields:", missingFields.join(", "));
-            res.status(400).json({ message: "Please fill all fields", missingFields });
+      
+            res.status(400).json({ message: "Please fill all fields" });
             return;
         }
         if (password !== confirmPassword) {
@@ -86,6 +78,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
             email,
             password: hashedPassword,
             role,
+            image:`https://api.dicebear.com/6.x/initials/svg?seed=${name}`, //to create a photo using initials like SKYPE
         });
 
         res.status(201).json({
