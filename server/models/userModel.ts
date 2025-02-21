@@ -33,10 +33,6 @@ const UserSchema: Schema<IUser> = new Schema(
       enum: ["Student", "Instructor", "Admin"],
       required: true,
     },
-    dateOfBirth: {
-      type: Date,
-      required: true
-    },
 
     courses: [
       {
@@ -52,3 +48,8 @@ const UserSchema: Schema<IUser> = new Schema(
 const UserModel: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
 
 export default UserModel;
+
+// dateOfBirth: {
+//   type: Date,
+//   required: true
+// },

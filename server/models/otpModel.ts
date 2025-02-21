@@ -28,7 +28,7 @@ async function sendVerificationEmail(email : string, otp: string) {
     try {
 
         const mailResponse = await mailSender(email,
-            "Verification Email from NotesHive",
+            "Verification Email from Metadots EdTech",
             emailTemplate(otp))
         console.log("Email sent successfully", mailResponse.response)
 
