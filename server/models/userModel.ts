@@ -6,6 +6,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  dateOfBirth: Date;
   role: "Student" | "Instructor" | "Admin";
   courses: mongoose.Types.ObjectId[];
   createdAt: Date;
@@ -32,6 +33,11 @@ const UserSchema: Schema<IUser> = new Schema(
       enum: ["Student", "Instructor", "Admin"],
       required: true,
     },
+    dateOfBirth: {
+      type: Date,
+      required: true
+    },
+
     courses: [
       {
         type: mongoose.Schema.Types.ObjectId,

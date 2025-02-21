@@ -1,9 +1,12 @@
-import Navbar from '@components/Navbar'
-
+// import Navbar from '@components/Navbar'
+import Signup from '@pages/Signup'
+import { Route, Routes } from 'react-router-dom'
 const App = () => {
   return (
     <div>
-      <Navbar/>
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
     </div>
   )
 }
