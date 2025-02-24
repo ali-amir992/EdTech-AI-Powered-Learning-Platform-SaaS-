@@ -11,7 +11,7 @@ interface ApiResponse {
         success: boolean;
         message?: string;
         token?: string;
-        user?:any
+        user?: any
     };
 }
 
@@ -117,7 +117,7 @@ interface LoginParams {
     password: string;
     navigate: NavigateFunction;
     token?: string;
-    user?: any; 
+    user?: any;
 }
 
 
@@ -156,6 +156,16 @@ export function login({ email, password, navigate }: LoginParams) {
         dispatch(setLoading(false));
         toast.dismiss(toastId);
     };
+}
+
+export function logout(navigate: NavigateFunction) {
+    return (dispatch: Dispatch) => {
+        dispatch(setToken(null))
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+        toast.success("Logged Out")
+        navigate("/")
+    }
 }
 
 
