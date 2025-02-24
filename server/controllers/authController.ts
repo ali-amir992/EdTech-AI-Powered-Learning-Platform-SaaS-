@@ -4,6 +4,9 @@ import OTPModel from "@models/otpModel";
 import bcrypt from "bcryptjs";
 import otpGenerator from "otp-generator";
 import jwt from "jsonwebtoken";
+import { AuthRequest } from "@middlewares/authMiddleware";
+import mailSender from '@utils/mailSender'
+import updatePassword from '@utils/updatePassword';
 
 export const sendOTP = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -142,6 +145,81 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({
             success: false,
             message: "User login failed",
+        });
+    }
+};
+
+export const changePassword = async (req: AuthRequest, res: Response) => {
+    try {
+        // Ensure user is authenticated
+        if (!req.user?.id) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized: No user ID found",
+            });
+        }
+        const id = req.user.id;
+
+        // Fetch data from the body
+        const { oldPassword, newPassword, confirmPassword } = req.body;
+
+        // Validate new and confirm password
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "New password and confirm password do not match",
+            });
+        }
+
+        // Fetch user from database
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        // Validate old password
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Incorrect old password",
+            });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the password in DB
+        user.password = hashedPassword;
+        await user.save();
+
+        // Send notification email (but do not fail if it fails)
+        try {
+            await mailSender(
+                user.email,
+                "Password updated - Study Notion",
+                updatePassword(
+                    user.email,
+                    `Password updated successfully for ${user.name}`,
+                )
+            );
+        } catch (error) {
+            console.error("Error sending email:", error);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Password updated successfully",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Unable to change the password, please try again",
         });
     }
 };

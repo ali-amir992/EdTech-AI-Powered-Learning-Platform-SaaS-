@@ -4,7 +4,7 @@ import User, { IUser } from '@models/userModel';
 
 // Add this interface at the top
 interface UserDocument {
-  id: string;
+  _id: string;
   email: string;
   role: string;
 }
@@ -32,6 +32,13 @@ const setupGoogleAuth = () => {
               image: profile.photos?.[0].value,
             });
           }
+          // Ensure the user object has the required fields
+          
+          const userPayload = {
+            id: user._id?.toString(), // Convert ObjectId to string
+            email: user.email,
+            role: user.role,
+          };
 
           return done(null, user);
         } catch (error) {

@@ -15,6 +15,9 @@ export interface IUser extends Document {
   about: string,
   createdAt: Date;
   updatedAt: Date;
+  token: string;
+  resetPasswordExpires: number;
+
 }
 
 // Define the schema
@@ -62,6 +65,12 @@ const UserSchema: Schema<IUser> = new Schema(
         ref: "Course",
       },
     ],
+    token: {
+      type: String, // Stores the reset token
+    },
+    resetPasswordExpires: {
+      type:Number, // Stores expiration timestamp
+    }
   },
   { timestamps: true }
 );

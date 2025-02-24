@@ -5,6 +5,7 @@ import { updateAvatar } from "@controllers/profileController";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 require('dotenv').config();
+
 const router = Router();
 
 router.post("/sendOTP", sendOTP)
