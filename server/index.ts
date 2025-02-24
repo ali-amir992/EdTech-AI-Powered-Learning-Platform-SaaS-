@@ -5,6 +5,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import cloudinaryConnect from '@config/cloudinary'
 import fileUpload from 'express-fileupload';
+import passport from 'passport';
+import setupGoogleAuth from '@config/googleOauth';
+import session from "express-session";
+
 
 
 const app = express();
@@ -26,6 +30,21 @@ app.use(
       tempFileDir:"/tmp"
   })
 )
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+  
+// Add these lines after your existing middleware setup
+app.use(passport.initialize());
+setupGoogleAuth();
+
 cloudinaryConnect();
 
 connectDB();

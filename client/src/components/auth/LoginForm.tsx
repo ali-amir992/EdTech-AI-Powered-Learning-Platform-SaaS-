@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useAppDispatch } from "@redux/hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
+  
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data: LoginFormInputs) => {
@@ -141,6 +142,19 @@ const Login = () => {
               Sign Up
             </Link>
           </p>
+          <div className="mt-4">
+            <a
+              href="http://localhost:5000/api/v1/user/auth/google"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300"
+            >
+              <img
+                src="https://www.google.com/favicon.ico"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span className="text-gray-600">Continue with Google</span>
+            </a>
+          </div>
         </div>
       )}
     </div>
