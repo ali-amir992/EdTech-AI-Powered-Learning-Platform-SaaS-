@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { sendOTP, signup } from "../services/operations/authAPI";
 import { BiArrowBack } from "react-icons/bi";
 import { PiClockCounterClockwiseBold } from "react-icons/pi";
-import { RootState, AppDispatch } from "@redux/store";
+import { RootState, AppDispatch } from "@/redux/store";
 
 const VerifyEmail: React.FC = () => {
     const { signupData, loading } = useSelector((state: RootState) => state.auth);

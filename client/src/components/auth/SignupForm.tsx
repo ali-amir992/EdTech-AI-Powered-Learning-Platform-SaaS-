@@ -2,13 +2,13 @@ import  { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { RootState } from "@redux/store";
-import { ACCOUNT_TYPE } from "@utils/constant";
+import { RootState } from "@/redux/store";
+import { ACCOUNT_TYPE } from "@/utils/constant";
 import { toast } from "react-hot-toast";
-import { sendOTP } from "@services/operations/authAPI";
-import { setSignupData } from "@redux/slices/authSlice";
+import { sendOTP } from "@/services/operations/authAPI";
+import { setSignupData } from "@/redux/slices/authSlice";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import Spinner from "@components/common/Spinner";
+import Spinner from "@/components/common/Spinner";
 
 type FormValues = {
   name: string;

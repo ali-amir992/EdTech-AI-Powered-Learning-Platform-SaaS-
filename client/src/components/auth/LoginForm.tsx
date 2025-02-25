@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useAppDispatch } from "@redux/hooks/useAppDispatch";
+import { useAppDispatch } from "@/redux/hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login } from "@services/operations/authAPI";
-import { RootState } from "@redux/store";
-import Spinner from "@components/common/Spinner";
+import { login } from "@/services/operations/authAPI";
+import { RootState } from "@/redux/store";
+import Spinner from "@/components/common/Spinner";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type LoginFormInputs = {

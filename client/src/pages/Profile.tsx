@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
-import {logout} from '@services/operations/authAPI'
-import { useAppDispatch } from "@redux/hooks/useAppDispatch";
+import {logout} from '@/services/operations/authAPI'
+import { useAppDispatch } from "@/redux/hooks/useAppDispatch";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
