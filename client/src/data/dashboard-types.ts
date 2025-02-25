@@ -1,5 +1,5 @@
 import type React from "react"
-export type UserRole = "student" | "instructor" | "admin"
+export type UserRole = "Student" | "Instructor" | "Admin"
 
 export interface NavItem {
   title: string

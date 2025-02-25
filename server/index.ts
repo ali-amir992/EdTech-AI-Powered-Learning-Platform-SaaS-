@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import connectDB from '@config/database';
 import userRoutes from '@routes/userRoutes';
+import admin from '@routes/admin';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import cloudinaryConnect from '@config/cloudinary'
@@ -50,7 +51,7 @@ cloudinaryConnect();
 connectDB();
 
 app.use('/api/v1/user', userRoutes);
-
+app.use('/api/v1/admin', admin);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');

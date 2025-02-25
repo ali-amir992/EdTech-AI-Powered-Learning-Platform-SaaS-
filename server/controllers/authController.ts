@@ -223,3 +223,4 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
         });
     }
 };
+

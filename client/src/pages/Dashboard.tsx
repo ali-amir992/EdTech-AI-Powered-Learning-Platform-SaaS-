@@ -1,10 +1,12 @@
 import { BarChart3, BookOpen, GraduationCap, Users2 } from "lucide-react"
-import type { DashboardStats, UserRole } from "@/data/dashboard-types"
+import type { DashboardStats } from "@/data/dashboard-types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
 
-const roleBasedStats: Record<UserRole, DashboardStats[]> = {
-    student: [
+const roleBasedStats: Record<string, DashboardStats[]> = {
+    Student: [
         {
             title: "Active Courses",
             value: 3,
@@ -24,7 +26,7 @@ const roleBasedStats: Record<UserRole, DashboardStats[]> = {
             icon: BarChart3,
         },
     ],
-    instructor: [
+    Instructor: [
         {
             title: "Active Classes",
             value: 4,
@@ -44,7 +46,7 @@ const roleBasedStats: Record<UserRole, DashboardStats[]> = {
             icon: GraduationCap,
         },
     ],
-    admin: [
+    Admin: [
         {
             title: "Total Users",
             value: 2459,
@@ -68,9 +70,13 @@ const roleBasedStats: Record<UserRole, DashboardStats[]> = {
 
 export default function DashboardPage() {
     // In a real app, this would come from your auth context
-    const userRole: UserRole = "admin"
-    const stats = roleBasedStats[userRole]
+    
+    const { user } = useSelector((state : RootState) => state.auth);
+    // const {loading} = useSelector((state : RootState) => state.auth);
+  
 
+    const stats = roleBasedStats[user?.role!];
+    console.log(stats)
     return (
         <DashboardLayout>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

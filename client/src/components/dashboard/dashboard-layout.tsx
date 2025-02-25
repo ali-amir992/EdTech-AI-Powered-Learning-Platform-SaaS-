@@ -1,5 +1,8 @@
 import type * as React from "react"
 import { BarChart3, BookOpen, GraduationCap, LayoutDashboard, Settings, User2, Users2 } from "lucide-react"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
+
 // import { usePathname } from "next/navigation"
 import { useLocation } from "react-router-dom";
 
@@ -27,7 +30,7 @@ import {
 } from "@/components/ui/sidebar"
 
 const roleBasedNavigation: Record<UserRole, NavItem[]> = {
-  student: [
+  Student: [
     { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { title: "My Courses", href: "/dashboard/courses", icon: BookOpen, badge: 3 },
     { title: "Progress", href: "/dashboard/progress", icon: BarChart3 },
@@ -39,7 +42,7 @@ const roleBasedNavigation: Record<UserRole, NavItem[]> = {
     },
     { title: "Profile", href: "/dashboard/profile", icon: User2 },
   ],
-  instructor: [
+  Instructor: [
     { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     {
       title: "My Teaching",
@@ -60,7 +63,7 @@ const roleBasedNavigation: Record<UserRole, NavItem[]> = {
     },
     { title: "Profile", href: "/dashboard/profile", icon: User2 },
   ],
-  admin: [
+  Admin: [
     { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     {
       title: "User Management",
@@ -78,22 +81,24 @@ const roleBasedNavigation: Record<UserRole, NavItem[]> = {
   ],
 }
 
-// Mock user data - in a real app, this would come from your auth system
-const currentUser: User = {
-  name: "Alice Johnson",
-  role: "student",
-  email: "alice@example.com",
-  avatar: "/placeholder.svg?height=32&width=32",
-}
+
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-    const location = useLocation();
-  const navigation = roleBasedNavigation[currentUser.role]
 
+  const { user } = useSelector((state: RootState) => state.auth);
+  const currentUser = user as User | null;
+
+  const location = useLocation();
+  if (!currentUser) {
+    return null; // or handle the null case appropriately
+  }
+  const navigation = roleBasedNavigation[currentUser.role as UserRole];
+
+  console.log("role is ", currentUser.role);
   return (
     <SidebarProvider>
       <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
