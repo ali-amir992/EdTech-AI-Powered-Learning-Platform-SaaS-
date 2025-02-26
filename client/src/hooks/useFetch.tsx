@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { axiosInstance } from "@services/apiConnector";
+import { axiosInstance } from "@/services/apiConnector";
 
 const useFetch = <T,>(url: string, defaultConfig?: { method: string; headers?: Record<string, string>; bodyData?: any }) => {
     
