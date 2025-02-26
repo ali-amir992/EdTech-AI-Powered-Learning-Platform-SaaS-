@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
 import { setLoading, setToken } from "@/redux/slices/authSlice";
 import { apiConnector } from "../apiConnector";
-import { endpoints } from "../apis";
+import { userEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export function sendOTP(email: string, navigate: NavigateFunction) {
         try {
             const response: ApiResponse = await apiConnector({
                 method: "POST",
-                url: endpoints.SENDOTP_API,
+                url: userEndpoints.SENDOTP_API,
                 bodyData: {
                     email,
                     checkUserPresent: true,
@@ -80,7 +80,7 @@ export function signup({
             const response: ApiResponse = await apiConnector(
                 {
                     method: "POST",
-                    url: endpoints.SIGNUP_API,
+                    url: userEndpoints.SIGNUP_API,
                     bodyData: {
                         role,
                         name,
@@ -124,13 +124,13 @@ interface LoginParams {
 
 export function login({ email, password, navigate }: LoginParams) {
     return async (dispatch: Dispatch) => {
-        const toastId = toast.loading("Loading....");
+        // const toastId = toast.loading("Loading....");
         dispatch(setLoading(true));
 
         try {
             const response: ApiResponse = await apiConnector({
                 method: "POST",
-                url: endpoints.LOGIN_API,
+                url: userEndpoints.LOGIN_API,
                 bodyData: { email, password },
             });
 
@@ -154,7 +154,7 @@ export function login({ email, password, navigate }: LoginParams) {
         }
 
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
+        // toast.dismiss(toastId);
     };
 }
 

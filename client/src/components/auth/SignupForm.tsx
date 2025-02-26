@@ -1,31 +1,38 @@
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
-import { Link } from "react-router-dom";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { setSignupData } from "@/redux/slices/authSlice"; // Adjust the import path as needed
+import { sendOTP } from "@/services/operations/authAPI";
 
 interface FormValues {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-  role: string
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: string;
 }
 
 const ACCOUNT_TYPE = {
   STUDENT: "Student",
   INSTRUCTOR: "Instructor",
-}
+};
 
 export default function SignupForm() {
-  const [showPassword, setShowPassword] = React.useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.auth);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -35,39 +42,39 @@ export default function SignupForm() {
       confirmPassword: "",
       role: "",
     },
-  })
+  });
 
   const onSubmit = async (data: FormValues) => {
     if (data.password !== data.confirmPassword) {
       form.setError("confirmPassword", {
         type: "manual",
         message: "Passwords do not match",
-      })
-      return
+      });
+      return;
     }
 
-    setLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setLoading(false)
-    console.log(data)
-  }
+    dispatch(setSignupData(data));
+    dispatch(sendOTP(data.email, navigate) as any);
+    form.reset();
+  };
 
   if (loading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
-    )
+    );
   }
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
       <Card className="w-full max-w-3xl">
+
         <CardHeader className="space-y-1">
           <CardTitle className="text-center text-3xl">Start Your Journey with MetaDots</CardTitle>
           <CardDescription className="text-center">Build skills for today, tomorrow, and beyond.</CardDescription>
         </CardHeader>
+        
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -220,28 +227,27 @@ export default function SignupForm() {
                   Create Account
                 </Button>
 
-                <Button type="button" variant="outline" className="w-full" asChild>
-                  <a
-                    href="http://localhost:5000/api/v1/user/auth/google"
+                <Button type="button" variant="outline" className="w-full">
+                  <Link
+                    to="http://localhost:5000/api/v1/user/auth/google"
                     className="flex items-center justify-center gap-2"
                   >
                     <img src="https://www.google.com/favicon.ico" alt="Google" className="h-5 w-5" />
                     Continue with Google
-                  </a>
+                  </Link>
                 </Button>
               </div>
 
               <div className="text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link to="/login" className="font-medium text-primary underline-offset-4 hover:underline">
-  Sign In
-</Link>
+                  Sign In
+                </Link>
               </div>
             </form>
           </Form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-

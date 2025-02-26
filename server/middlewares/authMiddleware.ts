@@ -20,7 +20,8 @@ export const isAuthenticated = async (
         const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
+            res.status(401).json({ success: false, message: "Unauthorized: user is not logged in" });
+            console.log("the issue is here")
             return;
         }
 

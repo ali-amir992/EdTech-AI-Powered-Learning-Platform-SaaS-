@@ -1,11 +1,15 @@
 import * as React from "react"
 import { useForm } from "react-hook-form"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useAppDispatch } from "@/redux/hooks/useAppDispatch";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { login } from "@/services/operations/authAPI";
 
 interface LoginFormInputs {
   email: string
@@ -13,8 +17,19 @@ interface LoginFormInputs {
 }
 
 export default function LoginForm() {
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const loading = useSelector((state: RootState) => state.auth.loading);
+
   const [showPassword, setShowPassword] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+  // const [loading, setLoading] = React.useState(false)
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<LoginFormInputs>();
 
   const form = useForm<LoginFormInputs>({
     defaultValues: {
@@ -23,13 +38,16 @@ export default function LoginForm() {
     },
   })
 
-  const onSubmit = async (data: LoginFormInputs) => {
-    setLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log(data)
-    setLoading(false)
-  }
+  const onSubmit = (data: LoginFormInputs) => {
+    dispatch(
+      login({
+        email: data.email,
+        password: data.password,
+        navigate,
+      })
+    );
+  };
+
 
   if (loading) {
     return (
