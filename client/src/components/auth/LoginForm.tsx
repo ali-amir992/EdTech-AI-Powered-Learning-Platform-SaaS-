@@ -39,6 +39,7 @@ export default function LoginForm() {
   })
 
   const onSubmit = (data: LoginFormInputs) => {
+    console.log("i am dispatching the login");
     dispatch(
       login({
         email: data.email,

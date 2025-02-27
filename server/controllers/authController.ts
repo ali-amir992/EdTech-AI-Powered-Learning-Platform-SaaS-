@@ -129,7 +129,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 httpOnly: true,
             }
 
-
+            console.log("cookie is now stored in the browser");
             res.cookie("token", token, options).status(200).json({
                 success: true,
                 token,

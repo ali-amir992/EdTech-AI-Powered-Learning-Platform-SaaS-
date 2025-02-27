@@ -132,6 +132,9 @@ export function login({ email, password, navigate }: LoginParams) {
                 method: "POST",
                 url: userEndpoints.LOGIN_API,
                 bodyData: { email, password },
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
 
             console.log("Login API response...", response);
@@ -150,7 +153,7 @@ export function login({ email, password, navigate }: LoginParams) {
             navigate("/profile");
         } catch (error: any) {
             console.error("Login API error...", error);
-            toast.error(error.response?.data?.message || "Login Failed");
+            toast.error(error.response?.data?.message || "Login Failed here");
         }
 
         dispatch(setLoading(false));
