@@ -13,6 +13,7 @@ export interface IUser extends Document {
   phone: string,
   gender: string,
   about: string,
+  status: "Blocked" | "Deleted" | "Verified" | "Not-Verified" | "Pending",
   createdAt: Date;
   updatedAt: Date;
   token: string;
@@ -51,6 +52,11 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       trim: true,
     },
+    status: {
+      type: String,
+      enum: ["Blocked", "Deleted", "Verified", "Not-Verified", "Pending"],
+      default: "Not-Verified",
+    },
     dateOfBirth: {
       type: Date,
     },
@@ -69,7 +75,7 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String, // Stores the reset token
     },
     resetPasswordExpires: {
-      type:Number, // Stores expiration timestamp
+      type: Number, // Stores expiration timestamp
     }
   },
   { timestamps: true }
