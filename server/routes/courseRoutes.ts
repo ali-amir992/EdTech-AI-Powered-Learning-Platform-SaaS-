@@ -8,7 +8,7 @@ import {
     publishCourse,
     
 } from "../controllers/courseController";
-import { verifyToken, isAdmin, isInstructor, isStudent } from "../middlewares/authMiddleware";
+import { isAuthenticated, isAdmin, isInstructor, isStudent } from "@middlewares/authMiddleware";
 
 const router = express.Router();
 
@@ -17,15 +17,15 @@ router.get("/", getAllCourses);        // Get all courses
 router.get("/:courseId", getCourseById); // Get course details by ID
 
 // ✅ Protected Routes (Requires authentication)
-router.post("/", verifyToken, isInstructor, createCourse); // Create a course
-router.put("/:courseId", verifyToken, isInstructor, updateCourse); // Update course
-router.delete("/:courseId", verifyToken, isAdmin, deleteCourse); // Delete course
+router.post("/", isAuthenticated, isInstructor, createCourse); // Create a course
+router.put("/:courseId", isAuthenticated, isInstructor, updateCourse); // Update course
+router.delete("/:courseId", isAuthenticated, isAdmin, deleteCourse); // Delete course
 
 // // ✅ Lesson Management (Instructor Only)
 // router.post("/:courseId/lessons", verifyToken, isInstructor, addLessonToCourse); // Add lesson to course
 
 // // ✅ Course Publishing (Instructor/Admin Only)
-router.put("/:courseId/publish", verifyToken, isInstructor, publishCourse); // Publish a course
+router.put("/:courseId/publish", isAuthenticated, isInstructor, publishCourse); // Publish a course
 
 // // ✅ Enrollment (Student Only)
 // router.post("/:courseId/enroll", verifyToken, isStudent, enrollInCourse); // Enroll in a course
