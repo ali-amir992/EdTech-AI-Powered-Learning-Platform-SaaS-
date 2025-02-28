@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 
-export const axiosInstance = axios.create({});
+export const axiosInstance = axios.create({
+    withCredentials: true, // Enable credentials (cookies)
+});
 
 interface ApiConnectorParams {
     method: Method;

@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
-import { setLoading, setToken } from "@redux/slices/authSlice";
+import { setLoading, setToken } from "@/store/slices/authSlice";
 import { apiConnector } from "../apiConnector";
-import { endpoints } from "../apis";
+import { userEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 
@@ -11,7 +11,7 @@ interface ApiResponse {
         success: boolean;
         message?: string;
         token?: string;
-        user?:any
+        user?: any
     };
 }
 
@@ -24,7 +24,7 @@ export function sendOTP(email: string, navigate: NavigateFunction) {
         try {
             const response: ApiResponse = await apiConnector({
                 method: "POST",
-                url: endpoints.SENDOTP_API,
+                url: userEndpoints.SENDOTP_API,
                 bodyData: {
                     email,
                     checkUserPresent: true,
@@ -80,7 +80,7 @@ export function signup({
             const response: ApiResponse = await apiConnector(
                 {
                     method: "POST",
-                    url: endpoints.SIGNUP_API,
+                    url: userEndpoints.SIGNUP_API,
                     bodyData: {
                         role,
                         name,
@@ -117,21 +117,24 @@ interface LoginParams {
     password: string;
     navigate: NavigateFunction;
     token?: string;
-    user?: any; 
+    user?: any;
 }
 
 
 
 export function login({ email, password, navigate }: LoginParams) {
     return async (dispatch: Dispatch) => {
-        const toastId = toast.loading("Loading....");
+        // const toastId = toast.loading("Loading....");
         dispatch(setLoading(true));
 
         try {
             const response: ApiResponse = await apiConnector({
                 method: "POST",
-                url: endpoints.LOGIN_API,
+                url: userEndpoints.LOGIN_API,
                 bodyData: { email, password },
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
 
             console.log("Login API response...", response);
@@ -150,12 +153,22 @@ export function login({ email, password, navigate }: LoginParams) {
             navigate("/profile");
         } catch (error: any) {
             console.error("Login API error...", error);
-            toast.error(error.response?.data?.message || "Login Failed");
+            toast.error(error.response?.data?.message || "Login Failed here");
         }
 
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
+        // toast.dismiss(toastId);
     };
+}
+
+export function logout(navigate: NavigateFunction) {
+    return (dispatch: Dispatch) => {
+        dispatch(setToken(null))
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+        toast.success("Logged Out")
+        navigate("/")
+    }
 }
 
 
