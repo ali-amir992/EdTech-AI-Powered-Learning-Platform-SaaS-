@@ -1,13 +1,13 @@
 import express, { Request, Response } from 'express';
-import connectDB from '@config/database';
-import userRoutes from '@routes/userRoutes';
-import admin from '@routes/admin';
+import connectDB from 'db/database';
+import userRoutes from '@routes/User';
+import admin from '@routes/Admin';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import cloudinaryConnect from '@config/cloudinary'
 import fileUpload from 'express-fileupload';
 import passport from 'passport';
-import setupGoogleAuth from '@config/googleOauth';
+import {setupGoogleAuth} from '@controllers/Auth';
 import session from "express-session";
 
 
@@ -23,12 +23,12 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true
-  })  
+  })
 )
 app.use(
   fileUpload({
-      useTempFiles:true,
-      tempFileDir:"/tmp"
+    useTempFiles: true,
+    tempFileDir: "/tmp"
   })
 )
 
@@ -41,7 +41,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-  
+
 // Add these lines after your existing middleware setup
 app.use(passport.initialize());
 setupGoogleAuth();

@@ -7,8 +7,8 @@ import {
     getCourseById,
     publishCourse,
     
-} from "../controllers/courseController";
-import { isAuthenticated, isAdmin, isInstructor, isStudent } from "@middlewares/authMiddleware";
+} from "../controllers/Course";
+import { isAuthenticated, isAdmin, isInstructor, isStudent } from "@middlewares/Auth";
 
 const router = express.Router();
 

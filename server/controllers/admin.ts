@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { AuthRequest } from "@middlewares/authMiddleware";
-import User from "@models/userModel";
+import { AuthRequest } from "@middlewares/Auth";
+import User from "@models/User";
 import bcrypt from "bcryptjs";
 
 

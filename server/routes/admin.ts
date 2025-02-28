@@ -1,6 +1,6 @@
 import express from "express";
-import { createUser, updateUser, deleteUser, getUsers } from "@controllers/admin";
-import { isAdmin, isAuthenticated } from "@middlewares/authMiddleware";
+import { createUser, updateUser, deleteUser, getUsers } from "@controllers/Admin";
+import { isAdmin, isAuthenticated } from "@middlewares/Auth";
 
 const router = express.Router();
 

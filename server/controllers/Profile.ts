@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { uploadImageToCloudinary } from "@utils/imageUploader";
-import User from "@models/userModel"; // Adjust path as needed
+import User from "@models/User"; // Adjust path as needed
 import fileUpload from "express-fileupload"; // Import fileUpload types
 require('dotenv').config();
 

@@ -1,7 +1,7 @@
 import { Router, Response, RequestHandler } from "express";
-import { login, signup, sendOTP } from "@controllers/authController";
-import { isAuthenticated, isStudent, isAdmin, isInstructor, AuthRequest } from "@middlewares/authMiddleware";
-import { updateAvatar } from "@controllers/profileController";
+import { login, signup, sendOTP } from "@controllers/Auth";
+import { isAuthenticated, isStudent, isAdmin, isInstructor, AuthRequest } from "@middlewares/Auth";
+import { updateAvatar } from "@controllers/Profile";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 require('dotenv').config();

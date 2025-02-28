@@ -1,4 +1,4 @@
-import User from "@models/userModel";
+import User from "@models/User";
 import mailSender from "@utils/mailSender";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";

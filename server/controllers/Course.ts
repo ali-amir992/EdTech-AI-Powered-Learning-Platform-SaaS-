@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Course from "@models/Course";
-import User from "@models/userModel";
+import User from "@models/User";
 
 
 export const createCourse = async (req: Request, res: Response) => {
