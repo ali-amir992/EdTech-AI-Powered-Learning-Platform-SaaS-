@@ -5,9 +5,10 @@ import User from "@models/User";
 
 export const createCourse = async (req: Request, res: Response) => {
     try {
-        const { title, description, price, instructor, category, contentType } = req.body;
+        const { title, description, price, instructor, category } = req.body;
 
         // Check if instructor exists
+
         const instructorExists = await User.findById(instructor);
         if (!instructorExists) {
             res.status(404).json({ success: false, message: "Instructor not found" });
@@ -20,14 +21,14 @@ export const createCourse = async (req: Request, res: Response) => {
             price,
             instructor,
             category,
-            contentType,
-            status: "draft", //a course is always created in draft mode
+            status: "Draft", //a course is always created in draft mode
         });
 
         await newCourse.save();
 
         res.status(201).json({ success: true, message: "Course created in draft mode", course: newCourse });
     } catch (error) {
+        console.log("Error creating course", error);
         res.status(500).json({ success: false, message: "Failed to create course" });
     }
 };
@@ -141,3 +142,4 @@ export const getCourseById = async (req: Request, res: Response) => {
         return;
     }
 };
+

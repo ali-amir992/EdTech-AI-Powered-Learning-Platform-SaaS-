@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { RootState } from "@/store/store";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { setSignupData } from "@/redux/slices/authSlice"; // Adjust the import path as needed
+import { setSignupData } from "@/store/slices/authSlice"; // Adjust the import path as needed
 import { sendOTP } from "@/services/operations/authAPI";
 
 interface FormValues {

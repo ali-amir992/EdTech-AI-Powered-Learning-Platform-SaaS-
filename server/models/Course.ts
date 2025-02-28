@@ -5,7 +5,6 @@ export interface ICourse extends Document {
     description: string;
     price: number;
     instructor: mongoose.Types.ObjectId;
-    contentType: "video" | "document" | "quiz";
     lessons: mongoose.Types.ObjectId[];
     studentsEnrolled: mongoose.Types.ObjectId[];
     sections: mongoose.Types.ObjectId[]; 
@@ -35,15 +34,10 @@ const CourseSchema = new Schema<ICourse>(
             type: Schema.Types.ObjectId,
             ref: "User", required: true
         },
-
-        contentType: {
-            type: String,
-            enum: ["video", "document", "quiz"],
-            required: true
-        },
         category: {
             type: Schema.Types.ObjectId,
-            ref: "Category", required: true
+            ref: "Category",
+            required: true
         },
         language: {
             type: String,

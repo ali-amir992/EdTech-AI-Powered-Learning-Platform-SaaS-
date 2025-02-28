@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAppDispatch } from "@/redux/hooks/useAppDispatch";
+import { useAppDispatch } from "@/store/hooks/useAppDispatch";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { RootState } from "@/store/store";
 import { login } from "@/services/operations/authAPI";
 
 interface LoginFormInputs {
