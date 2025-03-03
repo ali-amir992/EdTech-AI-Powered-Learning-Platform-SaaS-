@@ -12,6 +12,7 @@ import session from "express-session";
 import categoryRoutes from '@routes/Category';
 import lessonRoutes from '@routes/Lesson';
 import courseRoutes from '@routes/Course';
+import sectionRoutes from '@routes/Section';
 
 
 
@@ -57,9 +58,10 @@ connectDB();
 app.use("/uploads/videos", express.static("uploads/videos")); // Serve videos
 
 
-app.use("/api//v1/lessons", lessonRoutes);
+app.use('/api/v1/section', sectionRoutes);
+app.use('/api/v1/lesson', lessonRoutes);
 app.use('/api/v1/user', userRoutes);
-app.use('/api/v1/admin', admin);
+app.use('/api/v1/admin', admin);``
 app.use('/api/v1/course', courseRoutes);
 app.use('/api/v1/category', categoryRoutes);
 

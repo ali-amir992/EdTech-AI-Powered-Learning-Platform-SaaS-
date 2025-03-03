@@ -7,9 +7,16 @@ export const createLesson = async (req: Request, res: Response) => {
     try {
         const { title, description, duration, section, order } = req.body;
 
+        // Debug log
+        console.log('Request body:', req.body);
+        console.log('Request file:', req.file);
         // Validate required fields
         if (!title || !duration || !section || !order) {
-            res.status(400).json({ success: false, message: "Title, duration, section, and order are required." });
+
+            res.status(400).json({
+                success: false,
+                message: "Title, duration, section, and order are required."
+            });
             return;
         }
 
