@@ -11,3 +11,10 @@ export const userEndpoints = {
 export const adminEndpoints = {
     GET_USERS_API: BASE_URL + "/admin/",  
 }
+
+export const courseEndpoints = {
+    GET_ALL_COURSES_API: BASE_URL + "/course/",
+    ADD_COURSE_API: BASE_URL + "/course/",
+    DELETE_COURSE_API: BASE_URL + "/course/",
+    UPDATE_COURSE_API: BASE_URL + "/course/",
+}
