@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import Lesson from "@models/Lesson";
 import mongoose from "mongoose";
 import Section from "@models/Section";
+import fs from "fs";
 
 export const createLesson = async (req: Request, res: Response) => {
     try {
+        
         const { title, description, duration, section, order } = req.body;
 
         // Debug log
@@ -26,6 +28,17 @@ export const createLesson = async (req: Request, res: Response) => {
             return;
         }
 
+        // Validate file type
+        const allowedMimeTypes = ["video/mp4", "video/mkv", "video/avi", "video/webm"];
+        if (!allowedMimeTypes.includes(req.file.mimetype)) {
+            // Remove the uploaded file if it's not valid
+            fs.unlinkSync(req.file.path);
+             res.status(400).json({
+                success: false,
+                message: "Invalid file type. Only MP4, MKV, AVI, and WEBM videos are allowed."
+            });
+            return;
+        }
         // Check if the section exists
         const sectionExists = await Section.findById(section);
         if (!sectionExists) {
@@ -57,8 +70,16 @@ export const createLesson = async (req: Request, res: Response) => {
             lesson: newLesson,
         });
     } catch (error) {
-        console.error("Error creating lesson:", error);
-        res.status(500).json({ success: false, message: "Internal server error." });
-        return;
+
+            // If there's an error and a file was uploaded, remove it
+            if (req.file) {
+                fs.unlinkSync(req.file.path);
+            }
+            console.error("Error creating lesson:", error);
+             res.status(500).json({ 
+                success: false, 
+                message: "Internal server error.",
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
     }
 };

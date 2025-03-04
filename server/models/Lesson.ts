@@ -4,9 +4,9 @@ export interface ILesson extends Document {
     title: string;
     description: string;
     videoUrl: string;
-    duration: number; // Duration in seconds
+    duration: string; // Duration in seconds
     section: mongoose.Types.ObjectId; // Reference to Section
-    order: number;
+    order: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -23,7 +23,7 @@ const LessonSchema = new Schema<ILesson>(
             required: true
         },
         duration: {
-            type: Number,
+            type: String,
             required: true
         },
         section: {
@@ -32,7 +32,7 @@ const LessonSchema = new Schema<ILesson>(
             required: true
         },
         order: {
-            type: Number,
+            type: String,
             required: true
         }, // Position of the lesson within a section
     },

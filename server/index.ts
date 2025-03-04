@@ -5,7 +5,7 @@ import admin from '@routes/Admin';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import cloudinaryConnect from '@config/cloudinary'
-import fileUpload from 'express-fileupload';
+// import fileUpload from 'express-fileupload';
 import passport from 'passport';
 import { setupGoogleAuth } from '@controllers/Auth';
 import session from "express-session";
@@ -22,6 +22,7 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
+app.use("/uploads/videos", express.static("uploads/videos")); // Serve videos
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -30,12 +31,13 @@ app.use(
     credentials: true
   })
 )
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp"
-  })
-)
+
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp"
+//   })
+// )
 
 app.use(
   session({
@@ -55,7 +57,6 @@ cloudinaryConnect();
 
 connectDB();
 
-app.use("/uploads/videos", express.static("uploads/videos")); // Serve videos
 
 
 app.use('/api/v1/section', sectionRoutes);
