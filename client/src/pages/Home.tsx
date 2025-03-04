@@ -11,7 +11,7 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(getAllCourses());
-    }, [dispatch]);
+    }, []);
 
 
     return (
