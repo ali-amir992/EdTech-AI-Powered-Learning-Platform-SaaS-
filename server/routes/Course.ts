@@ -9,6 +9,7 @@ import {
     
 } from "@controllers/Course";
 import { isAuthenticated, isAdmin, isInstructor, isStudent } from "@middlewares/Auth";
+import upload from "@middlewares/VideoUpload";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get("/", getAllCourses);        // Get all courses
 router.get("/:courseId", getCourseById); // Get course details by ID
 
 // ✅ Protected Routes (Requires authentication)
-router.post("/", isAuthenticated, isInstructor, createCourse); // Create a course
+router.post("/", isAuthenticated, isInstructor, upload.single("image"), createCourse); // Create a course
 router.put("/:courseId", isAuthenticated, isInstructor, updateCourse); // Update course
 router.delete("/:courseId", isAuthenticated, isAdmin, deleteCourse); // Delete course
 

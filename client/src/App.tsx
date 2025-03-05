@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom'
 import Dashboard from '@/pages/Dashboard'
 import UserManagement from '@/components/dashboard/pages/UserManagement'
 import Home from '@/pages/Home'
+import CourseDetail from './pages/CourseDetails'
 
 const App = () => {
   return (
@@ -16,6 +17,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/:courseId" element={<CourseDetail />} />
+
 
 
         <Route path="/dashboard" element={<Dashboard />} />

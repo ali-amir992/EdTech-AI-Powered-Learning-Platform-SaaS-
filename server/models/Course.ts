@@ -12,6 +12,7 @@ export interface ICourse extends Document {
     createdAt: Date;
     updatedAt: Date;
     language: string;
+    thumbnail: string;
     status: "Draft" | "Published";
 }
 
@@ -47,6 +48,9 @@ const CourseSchema = new Schema<ICourse>(
             enum: ["Draft", "Published"],
             default: "Draft"
         },
+        thumbnail: { type: String,
+            
+            required: true }, 
         lessons: [{
             type: Schema.Types.ObjectId,
             ref: "Lesson"

@@ -1,5 +1,5 @@
 import { toast } from "react-hot-toast";
-import { setLoading } from "@/store/slices/authSlice";
+import { setLoading } from "@/store/slices/courseSlice";
 import { apiConnector } from "../apiConnector";
 import { courseEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -44,3 +44,43 @@ export function getAllCourses() {
     toast.dismiss(toastId);
   };
 }
+
+// Fetch a course by ID
+export interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  // Add other properties as needed
+}
+
+export const getCourseById = async (courseId: string): Promise<Course | null> => {
+    const toastId = toast.loading("Loading course details...");
+
+    try {
+        // API call to fetch course details
+        const response = await apiConnector({
+            method: "GET",
+            url: `${courseEndpoints.GET_COURSE_BY_ID}/${courseId}`, // Ensure this matches your backend route
+        });
+
+        console.log("GET COURSE API response:", response);
+
+        if (!response.data.success) {
+            throw new Error(response.data.message || "Failed to fetch course details");
+        }
+
+        // Extract course details from response
+        const course = response.data.course;
+        toast.success("Course details fetched successfully");
+
+        return course; // Return course data
+    } catch (error: any) {
+        console.error("GET COURSE API ERROR", error);
+        toast.error(error.response?.data?.message || "Failed to fetch course details");
+        return null; // Return null in case of an error
+    } finally {
+        toast.dismiss(toastId);
+    }
+};
+

@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
 import Course from "@models/Course";
+import {cloudinaryConnect , cloudinary} from "@config/cloudinary";
 import User from "@models/User";
 
 
 export const createCourse = async (req: Request, res: Response) => {
     try {
         const { title, description, price, instructor, category } = req.body;
-
-        // Check if instructor exists
+        const thumbnail = req.file ? `/uploads/images/${req.file.filename}` : null;
+        
+        if (!thumbnail) {
+             res.status(400).json({ success: false, message: "Thumbnail is required" });
+             return;
+        }
 
         const instructorExists = await User.findById(instructor);
         if (!instructorExists) {
@@ -15,12 +20,22 @@ export const createCourse = async (req: Request, res: Response) => {
             return;
         }
 
+        
+        let result;
+        if (req.file) {
+            result = await cloudinary.uploader.upload(req.file.path, {
+                folder: "thumbnails",
+            });
+        }
+
+
         const newCourse = new Course({
             title,
             description,
             price,
             instructor,
             category,
+            thumbnail: result ? result.secure_url : thumbnail,
             status: "Draft", //a course is always created in draft mode
         });
 

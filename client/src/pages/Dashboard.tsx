@@ -3,7 +3,7 @@ import type { DashboardStats } from "@/data/dashboard-types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
 import { useSelector } from "react-redux"
-import { RootState } from "@/redux/store"
+import { RootState } from "@/store/store"
 
 const roleBasedStats: Record<string, DashboardStats[]> = {
     Student: [

@@ -2,41 +2,55 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Ensure uploads directory exists
-const uploadPath = path.join(__dirname, "../uploads/videos");
-if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-}
+// Define upload directories
+const videoUploadPath = path.join(__dirname, "../uploads/videos");
+const imageUploadPath = path.join(__dirname, "../uploads/images");
 
+// Ensure directories exist
+[videoUploadPath, imageUploadPath].forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+});
 
-// Configure multer storage
+// Configure Multer Storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, uploadPath);
+        // Determine storage folder based on file type
+        const isImage = file.mimetype.startsWith("image/");
+        cb(null, isImage ? imageUploadPath : videoUploadPath);
     },
     filename: (req, file, cb) => {
-        // Sanitize filename
-        const sanitizedFilename = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_');
-        cb(null, `${Date.now()}-${sanitizedFilename}`);
+        // Preserve file extension and sanitize filename
+        const ext = path.extname(file.originalname);
+        const name = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, "_");
+        cb(null, `${Date.now()}-${name}${ext}`);
     },
 });
 
-// File filter to allow only video files
-// File filter to allow only video files
+// File Filter to Allow Only Images & Videos
 const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    const allowedMimeTypes = ["video/mp4", "video/mkv", "video/avi", "video/webm"];
-    if (allowedMimeTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(new Error("Invalid file type. Only MP4, MKV, AVI, and WEBM videos are allowed."));
+    const imageTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    const videoTypes = ["video/mp4", "video/mkv", "video/avi", "video/webm"];
+
+    // Check which route is being used
+    if (req.path.includes("/upload/image") && !imageTypes.includes(file.mimetype)) {
+        return cb(new Error("Invalid file type. Please upload an image."));
     }
+
+    if (req.path.includes("/upload/video") && !videoTypes.includes(file.mimetype)) {
+        return cb(new Error("Invalid file type. Please upload a video."));
+    }
+
+    cb(null, true);
 };
 
-// Define upload middleware
+
+// Define Upload Middleware (Handles Both Images & Videos)
 const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 200 * 1024 * 1024, files: 1 }, // Max 200MB per video
+    limits: { fileSize: 200 * 1024 * 1024, files: 1 }, // Max 200MB
 });
 
 export default upload;

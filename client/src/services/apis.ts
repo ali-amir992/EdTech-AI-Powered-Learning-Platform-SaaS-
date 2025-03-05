@@ -14,6 +14,7 @@ export const adminEndpoints = {
 
 export const courseEndpoints = {
     GET_ALL_COURSES_API: BASE_URL + "/course/",
+    GET_COURSE_BY_ID: BASE_URL + "/course/",
     ADD_COURSE_API: BASE_URL + "/course/",
     DELETE_COURSE_API: BASE_URL + "/course/",
     UPDATE_COURSE_API: BASE_URL + "/course/",

@@ -4,7 +4,7 @@ import userRoutes from '@routes/User';
 import admin from '@routes/Admin';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import cloudinaryConnect from '@config/cloudinary'
+import {cloudinaryConnect} from '@config/cloudinary'
 // import fileUpload from 'express-fileupload';
 import passport from 'passport';
 import { setupGoogleAuth } from '@controllers/Auth';
@@ -23,6 +23,8 @@ require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
 app.use("/uploads/videos", express.static("uploads/videos")); // Serve videos
+app.use("/uploads/images", express.static("uploads/images")); // Serve images
+// app.use("/uploads/videos", express.static("uploads/videos")); // Serve videos
 app.use(express.json());
 app.use(cookieParser());
 app.use(

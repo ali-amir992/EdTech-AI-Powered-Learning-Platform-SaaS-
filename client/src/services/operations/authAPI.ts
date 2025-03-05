@@ -1,5 +1,5 @@
 import { toast } from "react-hot-toast";
-import { setLoading, setToken } from "@/store/slices/authSlice";
+import { setLoading, setToken, setUser } from "@/store/slices/authSlice";
 import { apiConnector } from "../apiConnector";
 import { userEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -145,6 +145,8 @@ export function login({ email, password, navigate }: LoginParams) {
 
             toast.success("Login successfully");
             dispatch(setToken(response.data.token));
+            dispatch(setUser(response.data.user));
+
 
             // ✅ Ensure token is stored as a string
             localStorage.setItem("token", JSON.stringify(response.data.token ?? ""));

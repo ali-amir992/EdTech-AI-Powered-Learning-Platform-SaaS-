@@ -9,10 +9,12 @@ interface Course {
 
 interface CourseState {
   courses: Course[];
+  loading: boolean;
 }
 
 const initialState: CourseState = {
   courses: [],
+  loading: false,
 };
 
 const courseSlice = createSlice({
@@ -22,11 +24,14 @@ const courseSlice = createSlice({
     setCourses: (state, action: PayloadAction<Course[]>) => {
       state.courses = action.payload; // Load initial courses
     },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+  },
     addCourse: (state, action: PayloadAction<Course>) => {
       state.courses.push(action.payload); // Add new course to UI
     },
   },
 });
 
-export const { setCourses, addCourse } = courseSlice.actions;
+export const { setCourses,setLoading, addCourse } = courseSlice.actions;
 export default courseSlice.reducer;
