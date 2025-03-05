@@ -1,4 +1,4 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import {
     createCourse,
     updateCourse,
@@ -14,19 +14,19 @@ import upload from "@middlewares/VideoUpload";
 const router = express.Router();
 
 // ✅ Public Routes (Anyone can access)
-router.get("/", getAllCourses);        // Get all courses
-router.get("/:courseId", getCourseById); // Get course details by ID
+router.get("/", getAllCourses as RequestHandler);        // Get all courses
+router.get("/:courseId", getCourseById as RequestHandler); // Get course details by ID
 
 // ✅ Protected Routes (Requires authentication)
-router.post("/", isAuthenticated, isInstructor, upload.single("image"), createCourse); // Create a course
-router.put("/:courseId", isAuthenticated, isInstructor, updateCourse); // Update course
-router.delete("/:courseId", isAuthenticated, isAdmin, deleteCourse); // Delete course
+router.post("/", isAuthenticated, isInstructor, upload.single("thumbnail"), createCourse as RequestHandler); // Create a course
+router.put("/:courseId", isAuthenticated, isInstructor, updateCourse as RequestHandler); // Update course
+router.delete("/:courseId", isAuthenticated, isAdmin, deleteCourse as RequestHandler); // Delete course
 
 // // ✅ Lesson Management (Instructor Only)
 // router.post("/:courseId/lessons", verifyToken, isInstructor, addLessonToCourse); // Add lesson to course
 
 // // ✅ Course Publishing (Instructor/Admin Only)
-router.put("/:courseId/publish", isAuthenticated, isInstructor, publishCourse); // Publish a course
+router.put("/:courseId/publish", isAuthenticated, isInstructor, publishCourse as RequestHandler); // Publish a course
 
 // // ✅ Enrollment (Student Only)
 // router.post("/:courseId/enroll", verifyToken, isStudent, enrollInCourse); // Enroll in a course

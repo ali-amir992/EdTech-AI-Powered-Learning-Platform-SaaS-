@@ -2,32 +2,38 @@ import { Request, Response } from "express";
 import Course from "@models/Course";
 import {cloudinaryConnect , cloudinary} from "@config/cloudinary";
 import User from "@models/User";
+import fs from "fs";
 
 
 export const createCourse = async (req: Request, res: Response) => {
     try {
         const { title, description, price, instructor, category } = req.body;
-        const thumbnail = req.file ? `/uploads/images/${req.file.filename}` : null;
         
-        if (!thumbnail) {
-             res.status(400).json({ success: false, message: "Thumbnail is required" });
-             return;
+        // Check if file exists
+        if (!req.file) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Thumbnail is required" 
+            });
+           
         }
 
         const instructorExists = await User.findById(instructor);
         if (!instructorExists) {
-            res.status(404).json({ success: false, message: "Instructor not found" });
-            return;
-        }
-
-        
-        let result;
-        if (req.file) {
-            result = await cloudinary.uploader.upload(req.file.path, {
-                folder: "thumbnails",
+            return res.status(404).json({ 
+                success: false, 
+                message: "Instructor not found" 
             });
         }
 
+        // Upload to cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "course-thumbnails",
+            resource_type: "image"
+        });
+
+        // Delete local file after upload
+        fs.unlinkSync(req.file.path);
 
         const newCourse = new Course({
             title,
@@ -35,16 +41,24 @@ export const createCourse = async (req: Request, res: Response) => {
             price,
             instructor,
             category,
-            thumbnail: result ? result.secure_url : thumbnail,
-            status: "Draft", //a course is always created in draft mode
+            thumbnail: result.secure_url,
+            status: "Draft"
         });
 
         await newCourse.save();
 
-        res.status(201).json({ success: true, message: "Course created in draft mode", course: newCourse });
+         res.status(201).json({ 
+            success: true, 
+            message: "Course created in draft mode", 
+            course: newCourse 
+        });
+        return;
     } catch (error) {
-        console.log("Error creating course", error);
-        res.status(500).json({ success: false, message: "Failed to create course" });
+        console.error("Error creating course:", error);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Failed to create course" 
+        });
     }
 };
 

@@ -33,13 +33,20 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCa
     const imageTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
     const videoTypes = ["video/mp4", "video/mkv", "video/avi", "video/webm"];
 
-    // Check which route is being used
-    if (req.path.includes("/upload/image") && !imageTypes.includes(file.mimetype)) {
-        return cb(new Error("Invalid file type. Please upload an image."));
+    // For course thumbnail uploads
+    if (file.fieldname === "thumbnail") {
+        if (!imageTypes.includes(file.mimetype)) {
+            return cb(new Error("Invalid file type. Please upload an image (PNG, JPEG, JPG, or WebP)."));
+        }
+        return cb(null, true);
     }
 
-    if (req.path.includes("/upload/video") && !videoTypes.includes(file.mimetype)) {
-        return cb(new Error("Invalid file type. Please upload a video."));
+    // For video uploads
+    if (file.fieldname === "video") {
+        if (!videoTypes.includes(file.mimetype)) {
+            return cb(new Error("Invalid file type. Please upload a video (MP4, MKV, AVI, or WebM)."));
+        }
+        return cb(null, true);
     }
 
     cb(null, true);

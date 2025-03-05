@@ -28,11 +28,22 @@ export default function Home() {
                         courses.map((course) => (
                             <Link to={`/${course._id}`} key={course._id}>
                                 <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
-                                    <div className="aspect-video bg-muted" />
+                                    {/* Thumbnail Image */}
+                                    <div className="aspect-video bg-muted relative">
+                                        <img
+                                            src={course.thumbnail} // Use the course thumbnail URL
+                                            alt={course.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                     <div className="p-4">
                                         <h3 className="text-lg font-semibold">{course.title}</h3>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-sm text-muted-foreground mb-2">
                                             {course.description}
+                                        </p>
+                                        {/* Display Price */}
+                                        <p className="text-lg font-bold text-primary">
+                                            ${course.price}
                                         </p>
                                     </div>
                                 </div>

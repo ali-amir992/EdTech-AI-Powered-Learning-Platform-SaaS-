@@ -5,6 +5,7 @@ interface Course {
   title: string;
   description: string;
   price: number;
+  thumbnail: string;
 }
 
 interface CourseState {
