@@ -83,14 +83,14 @@ export default function CoursePage() {
       <section className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5">
         <img
-            src="/placeholder.svg?height=600&width=1600"
+            src="https://res.cloudinary.com/dltsqv7za/image/upload/v1741164680/course-thumbnails/rids0nyidi3j4hr1xgof.png"
             alt="Course thumbnail"
             width={1600}
             height={600}
-            className="h-full w-full object-cover opacity-20"
+            className="h-full w-full object-cover opacity-40"
           />
         </div>
-        <div className="container relative z-10 py-12 md:py-24">
+        <div className="container relative z-10  py-12 md:py-24">
           <div className="mx-auto max-w-4xl">
             <div className="mb-6 flex items-center gap-2">
               <Badge variant="outline" className="bg-background/80 backdrop-blur">
@@ -151,7 +151,7 @@ export default function CoursePage() {
       </section>
 
       {/* Main Content */}
-      <section className="container py-12">
+      <section className="container pl-6 py-12">
         <div className="grid gap-8 md:grid-cols-3">
           {/* Left Column - Course Content */}
           <div className="md:col-span-2">
