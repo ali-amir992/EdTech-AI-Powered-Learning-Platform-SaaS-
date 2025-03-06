@@ -7,7 +7,7 @@ interface HeroSectionProps {
   course: ICourse;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({course} ) => {
+export function HeroSection({course} : HeroSectionProps ){
   return (
     <section className="relative">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5">
@@ -83,4 +83,3 @@ const HeroSection: React.FC<HeroSectionProps> = ({course} ) => {
   );
 };
 
-export default HeroSection;

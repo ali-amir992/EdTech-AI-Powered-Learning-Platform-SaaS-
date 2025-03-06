@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Course from "@models/Course";
-import {cloudinaryConnect , cloudinary} from "@config/cloudinary";
+import { cloudinaryConnect, cloudinary } from "@config/cloudinary";
 import User from "@models/User";
 import fs from "fs";
 
@@ -8,21 +8,21 @@ import fs from "fs";
 export const createCourse = async (req: Request, res: Response) => {
     try {
         const { title, description, price, instructor, category } = req.body;
-        
+
         // Check if file exists
         if (!req.file) {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Thumbnail is required" 
+            return res.status(400).json({
+                success: false,
+                message: "Thumbnail is required"
             });
-           
+
         }
 
         const instructorExists = await User.findById(instructor);
         if (!instructorExists) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "Instructor not found" 
+            return res.status(404).json({
+                success: false,
+                message: "Instructor not found"
             });
         }
 
@@ -47,17 +47,17 @@ export const createCourse = async (req: Request, res: Response) => {
 
         await newCourse.save();
 
-         res.status(201).json({ 
-            success: true, 
-            message: "Course created in draft mode", 
-            course: newCourse 
+        res.status(201).json({
+            success: true,
+            message: "Course created in draft mode",
+            course: newCourse
         });
         return;
     } catch (error) {
         console.error("Error creating course:", error);
-        return res.status(500).json({ 
-            success: false, 
-            message: "Failed to create course" 
+        return res.status(500).json({
+            success: false,
+            message: "Failed to create course"
         });
     }
 };
@@ -73,8 +73,8 @@ export const publishCourse = async (req: Request, res: Response) => {
             return;
         }
 
-        if (course.lessons.length === 0) {
-            res.status(400).json({ success: false, message: "Course must have at least one lesson before publishing" });
+        if (course.sections.length === 0) {
+            res.status(400).json({ success: false, message: "Course must have at least one section before publishing" });
             return;
         }
 
@@ -143,10 +143,11 @@ export const deleteCourse = async (req: Request, res: Response) => {
 
 export const getAllCourses = async (req: Request, res: Response) => {
     try {
-        const courses = await Course.find().populate("instructor category lessons");
+        const courses = await Course.find().populate("instructor category");
         res.status(200).json({ success: true, courses });
         return;
     } catch (error) {
+        console.log(error)
         res.status(500).json({ success: false, message: "Failed to retrieve courses", error });
         return;
 
@@ -156,7 +157,16 @@ export const getAllCourses = async (req: Request, res: Response) => {
 export const getCourseById = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
-        const course = await Course.findById(courseId).populate("instructor category lessons");
+        const course = await Course.findById(courseId)
+            .populate("instructor")
+            .populate("category")
+            .populate({
+                path: "sections",
+                populate: {
+                    path: "lessons", // Populate lessons inside each section
+                },
+            });
+
 
         if (!course) {
             res.status(404).json({ success: false, message: "Course not found" });

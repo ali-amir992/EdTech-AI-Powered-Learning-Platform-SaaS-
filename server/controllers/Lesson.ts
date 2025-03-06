@@ -61,7 +61,7 @@ export const createLesson = async (req: Request, res: Response) => {
         await newLesson.save();
 
         // Update section to include this lesson  
-        sectionExists.lessons.push(newLesson._id as mongoose.Types.ObjectId); // 👈 Fixing the TypeScript Error
+        sectionExists.lessons.push(newLesson._id as mongoose.Types.ObjectId); 
         await sectionExists.save();
 
         res.status(201).json({

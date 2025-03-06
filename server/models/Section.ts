@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { ILesson } from "./Lesson";
 
 export interface ISection extends Document {
     course: mongoose.Types.ObjectId;

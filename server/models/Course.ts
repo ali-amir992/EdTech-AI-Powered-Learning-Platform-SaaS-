@@ -1,14 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { IUser } from "./User";
+import { ISection } from "./Section";
 
 export interface ICourse extends Document {
     title: string;
     description: string;
     price: number;
-    instructor: mongoose.Types.ObjectId | IUser;
-    lessons: mongoose.Types.ObjectId[];
+    instructor: mongoose.Types.ObjectId;
     studentsEnrolled: mongoose.Types.ObjectId[];
-    sections: mongoose.Types.ObjectId[]; 
+    sections: mongoose.Types.ObjectId[] ; 
     category: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -52,10 +52,10 @@ const CourseSchema = new Schema<ICourse>(
         thumbnail: { type: String,
             
             required: true }, 
-        lessons: [{
-            type: Schema.Types.ObjectId,
-            ref: "Lesson"
-        }],
+        // lessons: [{
+        //     type: Schema.Types.ObjectId,
+        //     ref: "Lesson"
+        // }],
         studentsEnrolled: [{
             type: Schema.Types.ObjectId,
             ref: "User"
