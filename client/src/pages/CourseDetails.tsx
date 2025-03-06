@@ -1,27 +1,11 @@
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 // import { Navbar } from "@/components/common/Navbar";
-// import { getCourseById, Course } from "@/services/operations/Course";
+import { getCourseById } from "@/services/operations/Course";
+import { ICourse } from "@/types";
 
 // export default function CourseDetail() {
 
-
-//     const { courseId } = useParams(); // Get courseId from URL params
-//     const [course, setCourse] = useState<Course | null>();
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//         async function fetchCourse() {
-//             if (!courseId) return;
-
-//             setLoading(true);
-//             const courseData = await getCourseById(courseId);
-//             setCourse(courseData);
-//             setLoading(false);
-//         }
-
-//         fetchCourse();
-//     }, [courseId]);
 //     if (loading) return <div className="text-center py-10">Loading...</div>;
 
 //     return (
@@ -42,8 +26,8 @@
 //     );
 // }
 
-import type { Metadata } from "next"
-import {Link} from "react-router-dom"
+// import type { Metadata } from "next"
+import { Link } from "react-router-dom"
 import {
   Award,
   Calendar,
@@ -69,89 +53,50 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ReviewCarousel } from "@/components/courseDetails/review-carasoul"
+import HeroSection from "@/components/courseDetails/heroSection";
+import SectionAccordian from "@/components/courseDetails/SectionAccordian";
 
-export const metadata: Metadata = {
-  title: "Advanced Machine Learning: From Theory to Practice",
-  description:
-    "Master the fundamentals and advanced techniques of machine learning with hands-on projects and real-world applications.",
-}
+// export const metadata: Metadata = {
+//   title: "Advanced Machine Learning: From Theory to Practice",
+//   description:
+//     "Master the fundamentals and advanced techniques of machine learning with hands-on projects and real-world applications.",
+// }
 
 export default function CoursePage() {
+
+  const { courseId } = useParams(); // Get courseId from URL params
+  const [course, setCourse] = useState<ICourse | null>();
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    async function fetchCourse() {
+      if (!courseId) return;
+
+      setLoading(true);
+      const courseData = await getCourseById(courseId);
+      setCourse(courseData);
+      setLoading(false);
+    }
+
+    fetchCourse();
+  }, [courseId]);
+
+  console.log(course);
+
+
   return (
-    <div className="flex min-h-screen flex-col">
+
+    <div className="flex min-h-screen  flex-col ">
       {/* Hero Section */}
-      <section className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5">
-        <img
-            src="https://res.cloudinary.com/dltsqv7za/image/upload/v1741164680/course-thumbnails/rids0nyidi3j4hr1xgof.png"
-            alt="Course thumbnail"
-            width={1600}
-            height={600}
-            className="h-full w-full object-cover opacity-40"
-          />
-        </div>
-        <div className="container relative z-10  py-12 md:py-24">
-          <div className="mx-auto max-w-4xl">
-            <div className="mb-6 flex items-center gap-2">
-              <Badge variant="outline" className="bg-background/80 backdrop-blur">
-                Bestseller
-              </Badge>
-              <Badge variant="outline" className="bg-background/80 backdrop-blur">
-                Updated June 2023
-              </Badge>
-            </div>
-            <h1 className="mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
-              Advanced Machine Learning: From Theory to Practice
-            </h1>
-            <p className="mb-6 text-xl text-muted-foreground md:text-2xl">
-              Master the fundamentals and advanced techniques of machine learning with hands-on projects and real-world
-              applications.
-            </p>
-            <div className="mb-8 flex flex-wrap items-center gap-4 text-sm md:text-base">
-              <div className="flex items-center gap-1">
-                <Star className="h-5 w-5 fill-primary text-primary" />
-                <Star className="h-5 w-5 fill-primary text-primary" />
-                <Star className="h-5 w-5 fill-primary text-primary" />
-                <Star className="h-5 w-5 fill-primary text-primary" />
-                <Star className="h-5 w-5 fill-primary/50 text-primary" />
-                <span className="ml-2 font-medium">4.8/5</span>
-                <span className="text-muted-foreground">(2,546 ratings)</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Users className="h-4 w-4" />
-                <span>32,456 students enrolled</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                <span>42 hours of content</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>Last updated: June 2023</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Globe className="h-4 w-4" />
-                <span>English</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Avatar className="h-10 w-10 border-2 border-background">
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Dr. Sarah Johnson" />
-                  <AvatarFallback>SJ</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium">Dr. Sarah Johnson</p>
-                  <p className="text-xs text-muted-foreground">AI Researcher & Professor</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+      {course ? <HeroSection course={course} /> : <p>Course not found</p>}
+      {/* <HeroSection course={course} /> */}
 
       {/* Main Content */}
-      <section className="container pl-6 py-12">
+      <section className="container mx-auto pl-6 md:pl-12 py-12">
+
+
         <div className="grid gap-8 md:grid-cols-3">
           {/* Left Column - Course Content */}
           <div className="md:col-span-2">
@@ -204,93 +149,7 @@ export default function CoursePage() {
             </div>
 
             {/* Course Content */}
-            <div className="mb-8">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Course Content</h2>
-                <div className="text-sm text-muted-foreground">42 lessons • 12 sections • 42 hours total</div>
-              </div>
-
-              <Accordion type="single" collapsible className="w-full">
-                {[
-                  {
-                    title: "Introduction to Advanced Machine Learning",
-                    lessons: [
-                      { title: "Course Overview", duration: "10:23", isPreview: true },
-                      { title: "Setting Up Your Environment", duration: "15:47", isPreview: true },
-                      { title: "Review of Machine Learning Fundamentals", duration: "28:15" },
-                    ],
-                  },
-                  {
-                    title: "Deep Neural Networks",
-                    lessons: [
-                      { title: "Neural Network Architecture", duration: "32:45" },
-                      { title: "Activation Functions and Backpropagation", duration: "41:20" },
-                      { title: "Building Your First Deep Neural Network", duration: "55:18" },
-                      { title: "Hands-on Project: Digit Recognition", duration: "1:15:42" },
-                    ],
-                  },
-                  {
-                    title: "Convolutional Neural Networks",
-                    lessons: [
-                      { title: "Introduction to CNNs", duration: "28:34" },
-                      { title: "Convolutional Layers and Pooling", duration: "35:12" },
-                      { title: "Modern CNN Architectures", duration: "47:53" },
-                      { title: "Transfer Learning with CNNs", duration: "52:41" },
-                      { title: "Project: Image Classification", duration: "1:24:15" },
-                    ],
-                  },
-                  {
-                    title: "Natural Language Processing",
-                    lessons: [
-                      { title: "Text Preprocessing Techniques", duration: "31:22" },
-                      { title: "Word Embeddings", duration: "43:15" },
-                      { title: "Recurrent Neural Networks", duration: "55:37" },
-                      { title: "Transformers and Attention Mechanisms", duration: "1:02:48" },
-                      { title: "Project: Sentiment Analysis", duration: "1:18:29" },
-                    ],
-                  },
-                  {
-                    title: "Reinforcement Learning",
-                    lessons: [
-                      { title: "Introduction to Reinforcement Learning", duration: "38:42" },
-                      { title: "Markov Decision Processes", duration: "45:19" },
-                      { title: "Q-Learning and Deep Q Networks", duration: "57:23" },
-                      { title: "Policy Gradient Methods", duration: "49:51" },
-                      { title: "Project: Training an RL Agent", duration: "1:32:15" },
-                    ],
-                  },
-                ].map((section, i) => (
-                  <AccordionItem key={i} value={`section-${i}`}>
-                    <AccordionTrigger className="hover:no-underline">
-                      <div className="flex items-start justify-between">
-                        <span>{section.title}</span>
-                        <span className="ml-2 text-sm text-muted-foreground">{section.lessons.length} lessons</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-2 pt-2">
-                        {section.lessons.map((lesson, j) => (
-                          <div key={j} className="flex items-center justify-between rounded-md p-2 hover:bg-muted">
-                            <div className="flex items-center gap-2">
-                              <Play className="h-4 w-4 text-primary" />
-                              <span>
-                                {lesson.title}
-                                {lesson.isPreview && (
-                                  <Badge variant="outline" className="ml-2">
-                                    Preview
-                                  </Badge>
-                                )}
-                              </span>
-                            </div>
-                            <span className="text-sm text-muted-foreground">{lesson.duration}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
+            <SectionAccordian />
 
             {/* Who This Course Is For */}
             <div className="mb-8">
@@ -403,7 +262,7 @@ export default function CoursePage() {
           </div>
 
           {/* Right Column - Sticky Card */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 ">
             <div className="sticky top-24">
               <Card className="overflow-hidden">
                 <div className="aspect-video w-full overflow-hidden">
@@ -422,8 +281,7 @@ export default function CoursePage() {
                 </div>
                 <CardContent className="p-6">
                   <div className="mb-4 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">$89.99</span>
-                    <span className="text-lg text-muted-foreground line-through">$199.99</span>
+                    <span className="text-3xl font-bold">{course?.price}</span>
                     <Badge className="ml-auto">55% off</Badge>
                   </div>
                   <div className="mb-4 text-sm text-muted-foreground">

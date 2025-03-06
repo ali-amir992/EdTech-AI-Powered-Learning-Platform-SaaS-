@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ICourse } from "@/types";
 
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  thumbnail: string;
-}
+// interface Course {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   price: number;
+//   thumbnail: string;
+// }
 
 interface CourseState {
-  courses: Course[];
+  courses: ICourse[];
   loading: boolean;
 }
 
@@ -22,13 +23,13 @@ const courseSlice = createSlice({
   name: "courses",
   initialState,
   reducers: {
-    setCourses: (state, action: PayloadAction<Course[]>) => {
+    setCourses: (state, action: PayloadAction<ICourse[]>) => {
       state.courses = action.payload; // Load initial courses
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
   },
-    addCourse: (state, action: PayloadAction<Course>) => {
+    addCourse: (state, action: PayloadAction<ICourse>) => {
       state.courses.push(action.payload); // Add new course to UI
     },
   },

@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IUser } from "./User";
 
 export interface ICourse extends Document {
     title: string;
     description: string;
     price: number;
-    instructor: mongoose.Types.ObjectId;
+    instructor: mongoose.Types.ObjectId | IUser;
     lessons: mongoose.Types.ObjectId[];
     studentsEnrolled: mongoose.Types.ObjectId[];
     sections: mongoose.Types.ObjectId[]; 

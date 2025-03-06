@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IUser } from "@/types";
 
-interface User {
-    id: string;
-    email: string;
-    role: string;
-    avatar?: string;
-}
+// interface User {
+//     id: string;
+//     email: string;
+//     role: string;
+//     avatar?: string;
+// }
 
 interface AuthState {
     signupData: any | null;
     loading: boolean;
     token: string | null;
-    user: User | null;
+    user: IUser | null;
 }
 
 const initialState: AuthState = {
@@ -34,7 +35,7 @@ const authSlice = createSlice({
         setToken(state, action: PayloadAction<string | null>) {
             state.token = action.payload;
         },
-        setUser(state, action: PayloadAction<User | null>) {
+        setUser(state, action: PayloadAction<IUser | null>) {
             state.user = action.payload;
         },
         logout(state) {

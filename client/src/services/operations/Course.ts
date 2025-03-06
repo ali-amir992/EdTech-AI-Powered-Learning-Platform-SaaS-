@@ -4,6 +4,7 @@ import { apiConnector } from "../apiConnector";
 import { courseEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setCourses } from "@/store/slices/courseSlice";
+import { ICourse } from "@/types";
 
 // Define API Response Shape
 interface GetCoursesResponse {
@@ -45,16 +46,18 @@ export function getAllCourses() {
   };
 }
 
-// Fetch a course by ID
-export interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  // Add other properties as needed
-}
+// // Fetch a course by ID
+// export interface Course {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   price: number;
+//   thumbnail: string;
+  
+//   // Add other properties as needed
+// }
 
-export const getCourseById = async (courseId: string): Promise<Course | null> => {
+export const getCourseById = async (courseId: string): Promise<ICourse | null> => {
     const toastId = toast.loading("Loading course details...");
 
     try {
