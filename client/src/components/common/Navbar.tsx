@@ -31,7 +31,7 @@ interface NavbarProps {
     isAuthenticated?: boolean
 }
 
-export function Navbar({ isAuthenticated = false }: NavbarProps) {
+export function Navbar({ isAuthenticated = true }: NavbarProps) {
     const [isSearchOpen, setIsSearchOpen] = React.useState(false)
 
     return (

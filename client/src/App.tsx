@@ -6,11 +6,13 @@ import { Route, Routes } from 'react-router-dom'
 import Dashboard from '@/pages/Dashboard'
 import UserManagement from '@/components/dashboard/pages/UserManagement'
 import Home from '@/pages/Home'
-import CourseDetail from './pages/CourseDetails'
+import CourseDetail from '@/pages/CourseDetails'
+import { Navbar } from '@/components/common/Navbar'
 
 const App = () => {
   return (
     <div>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />

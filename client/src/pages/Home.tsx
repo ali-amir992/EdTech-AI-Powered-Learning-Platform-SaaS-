@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/common/Navbar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
@@ -16,7 +15,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar isAuthenticated={false} />
+
             <main className="flex-1 container px-12 py-8">
                 <h1 className="text-4xl font-bold mb-6">Welcome to MetaDots</h1>
                 <p className="text-xl text-muted-foreground mb-8">

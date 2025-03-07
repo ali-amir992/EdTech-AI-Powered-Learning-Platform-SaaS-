@@ -38,14 +38,15 @@ const authSlice = createSlice({
         setUser(state, action: PayloadAction<IUser | null>) {
             state.user = action.payload;
         },
-        logout(state) {
-            state.token = null;
-            state.user = null;
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-        }
+        // logout(state) {
+        //     state.token = null;
+        //     state.user = null;
+        //     (resetCart);
+        //     localStorage.removeItem("token");
+        //     localStorage.removeItem("user");
+        // }
     }
 });
 
-export const { setLoading, setSignupData, setToken, setUser, logout } = authSlice.actions;
+export const { setLoading, setSignupData, setToken, setUser } = authSlice.actions;
 export default authSlice.reducer;

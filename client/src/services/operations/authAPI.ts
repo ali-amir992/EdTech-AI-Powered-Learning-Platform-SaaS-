@@ -4,6 +4,7 @@ import { apiConnector } from "../apiConnector";
 import { userEndpoints } from "../apis";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
+import { resetCart } from "@/store/slices/cartSlice";
 
 // Define the expected shape of API responses
 interface ApiResponse {
@@ -166,6 +167,7 @@ export function login({ email, password, navigate }: LoginParams) {
 export function logout(navigate: NavigateFunction) {
     return (dispatch: Dispatch) => {
         dispatch(setToken(null))
+        dispatch(resetCart());
         localStorage.removeItem("token")
         localStorage.removeItem("user")
         toast.success("Logged Out")
