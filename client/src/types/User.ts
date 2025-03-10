@@ -1,9 +1,11 @@
+import { ICourse } from "./Course";
+
 export interface IUser {
     _id: string;
     name: string;
     email: string;
     role: "Student" | "Instructor" | "Admin";
-    courses: string[]; // Array of Course IDs
+    courses: ICourse[]; // Array of Course IDs
     image?: string;
     phone?: string;
     gender?: string;

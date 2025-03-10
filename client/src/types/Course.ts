@@ -1,3 +1,4 @@
+import { ICategory } from "./Category";
 import { ISection } from "./Section";
 import { IUser } from "./User";
 
@@ -7,9 +8,9 @@ export interface ICourse {
     description: string;
     price: number;
     instructor: IUser; // User ID
-    studentsEnrolled: string[]; // Array of User IDs
+    studentsEnrolled: IUser[]; // Array of User IDs
     sections: ISection[]; // Array of Section IDs
-    category: string; // Category ID
+    category: ICategory; // Category ID
     language: string;
     thumbnail: string; // URL of the course thumbnail
     status: "Draft" | "Published";
