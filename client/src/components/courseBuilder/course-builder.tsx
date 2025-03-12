@@ -1,23 +1,21 @@
-import type { CourseFormData, SectionFormData } from "@/types"
-import { Stepper } from "@/components/courseBuilder/stepper"
-import { Step1CourseDetails } from "@/components/courseBuilder/step1-metadata-form"
-import { Step2SectionsBuilder } from "@/components/course-builder/step2-sections-builder"
-import { Step3PreviewAndPublish } from "@/components/course-builder/step3-preview-and-publish"
+import { Stepper } from "@/components/courseBuilder/stepper";
+import { Step1CourseDetails } from "@/components/courseBuilder/step1-course-details";
+import { Step2SectionsBuilder } from "@/components/courseBuilder/step2-sections-builder";
+import { Step3PreviewAndPublish } from "@/components/courseBuilder/step3-preview-and-publish";
+import { ICourse } from "@/types";
 
 interface CourseBuilderProps {
-  currentStep: number
-  courseData: CourseFormData
-  sections: SectionFormData[]
-  onCourseDataSubmit: (data: CourseFormData) => void
-  onSectionsSubmit: (sections: SectionFormData[]) => void
-  onPublishCourse: () => void
-  onPrevStep: () => void
+  currentStep: number;
+  courseData: ICourse;
+  onCourseDataSubmit: (data: ICourse) => void;
+  onSectionsSubmit: (sections: ICourse["sections"]) => void;
+  onPublishCourse: () => void;
+  onPrevStep: () => void;
 }
 
 export function CourseBuilder({
   currentStep,
   courseData,
-  sections,
   onCourseDataSubmit,
   onSectionsSubmit,
   onPublishCourse,
@@ -43,19 +41,22 @@ export function CourseBuilder({
         {currentStep === 1 && <Step1CourseDetails initialData={courseData} onSubmit={onCourseDataSubmit} />}
 
         {currentStep === 2 && (
-          <Step2SectionsBuilder initialSections={sections} onSubmit={onSectionsSubmit} onBack={onPrevStep} />
+          <Step2SectionsBuilder
+            initialSections={courseData.sections} // Extracting sections from courseData
+            onSubmit={onSectionsSubmit}
+            onBack={onPrevStep}
+          />
         )}
 
         {currentStep === 3 && (
           <Step3PreviewAndPublish
             courseData={courseData}
-            sections={sections}
+            sections={courseData.sections} // Extracting sections from courseData
             onPublish={onPublishCourse}
             onBack={onPrevStep}
           />
         )}
       </div>
     </div>
-  )
+  );
 }
-

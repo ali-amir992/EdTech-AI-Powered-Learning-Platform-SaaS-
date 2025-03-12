@@ -17,7 +17,7 @@ interface GetCoursesResponse {
 
 // Fetch All Courses
 export function getAllCourses() {
-    
+
   return async (dispatch: Dispatch) => {
     const toastId = toast.loading("Fetching courses...");
     dispatch(setLoading(true));
@@ -53,37 +53,66 @@ export function getAllCourses() {
 //   description: string;
 //   price: number;
 //   thumbnail: string;
-  
+
 //   // Add other properties as needed
 // }
 
 export const getCourseById = async (courseId: string): Promise<ICourse | null> => {
-    const toastId = toast.loading("Loading course details...");
+  const toastId = toast.loading("Loading course details...");
 
-    try {
-        // API call to fetch course details
-        const response = await apiConnector({
-            method: "GET",
-            url: `${courseEndpoints.GET_COURSE_BY_ID}/${courseId}`, // Ensure this matches your backend route
-        });
+  try {
+    // API call to fetch course details
+    const response = await apiConnector({
+      method: "GET",
+      url: `${courseEndpoints.GET_COURSE_BY_ID}/${courseId}`, // Ensure this matches your backend route
+    });
 
-        console.log("GET COURSE API response:", response);
+    console.log("GET COURSE API response:", response);
 
-        if (!response.data.success) {
-            throw new Error(response.data.message || "Failed to fetch course details");
-        }
-
-        // Extract course details from response
-        const course = response.data.course;
-        toast.success("Course details fetched successfully");
-
-        return course; // Return course data
-    } catch (error: any) {
-        console.error("GET COURSE API ERROR", error);
-        toast.error(error.response?.data?.message || "Failed to fetch course details");
-        return null; // Return null in case of an error
-    } finally {
-        toast.dismiss(toastId);
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to fetch course details");
     }
+
+    // Extract course details from response
+    const course = response.data.course;
+    toast.success("Course details fetched successfully");
+
+    return course; // Return course data
+  } catch (error: any) {
+    console.error("GET COURSE API ERROR", error);
+    toast.error(error.response?.data?.message || "Failed to fetch course details");
+    return null; // Return null in case of an error
+  } finally {
+    toast.dismiss(toastId);
+  }
 };
 
+export const createCourse = async (formData: FormData, token: string): Promise<ICourse | null> => {
+  let result: ICourse | null = null;
+  const toastId = toast.loading("Creating course...");
+
+  try {
+      const response = await apiConnector({
+          method: "POST",
+          url: courseEndpoints.ADD_COURSE_API,
+          bodyData: formData,
+          headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+          },
+      });
+
+      if (!response?.data?.success) {
+          throw new Error(response?.data?.message || "Failed to add course");
+      }
+
+      toast.success("Course created successfully!");
+      result = response?.data?.data as ICourse;
+  } catch (error) {
+      console.error("Course creation error:", error);
+      toast.error("Course creation failed!");
+  }
+
+  toast.dismiss(toastId);
+  return result;
+};

@@ -1,3 +1,4 @@
+"use client"
 
 import type React from "react"
 
@@ -11,12 +12,12 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import type { ISection } from "@/types"
+import type { LessonFormData, SectionFormData } from "@/types"
 import { LessonCard } from "@/components/courseBuilder/lesson-card"
 
 interface SectionCardProps {
-  section: ISection
-  onUpdate: (section: ISection) => void
+  section: SectionFormData
+  onUpdate: (section: SectionFormData) => void
   onDelete: (sectionId: string) => void
 }
 
@@ -25,7 +26,9 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
   const [title, setTitle] = useState(section.title)
   const [description, setDescription] = useState(section.description)
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: section._id || `temp-section-${section.order}`,
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -53,12 +56,11 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
   }
 
   const addLesson = () => {
-    const newLesson = {
-      id: `lesson-${section._id}-${section.lessons.length + 1}`,
+    const newLesson: LessonFormData = {
+      _id: `temp-lesson-${Date.now()}`,
       title: "",
       description: "",
       order: section.lessons.length + 1,
-      videoUrl: null,
       videoFile: null,
     }
     onUpdate({
@@ -67,10 +69,10 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
     })
   }
 
-  const updateLesson = (updatedLesson: any) => {
+  const updateLesson = (updatedLesson: LessonFormData) => {
     onUpdate({
       ...section,
-      lessons: section.lessons.map((lesson) => (lesson.id === updatedLesson.id ? updatedLesson : lesson)),
+      lessons: section.lessons.map((lesson) => (lesson._id === updatedLesson._id ? updatedLesson : lesson)),
     })
   }
 
@@ -78,7 +80,7 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
     onUpdate({
       ...section,
       lessons: section.lessons
-        .filter((lesson) => lesson.id !== lessonId)
+        .filter((lesson) => lesson._id !== lessonId)
         .map((lesson, index) => ({
           ...lesson,
           order: index + 1,
@@ -87,11 +89,11 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
   }
 
   return (
-    <Card ref={setNodeRef} style={style} className={`${isDragging ? "border-primary" : ""}`}>
-      <CardHeader className="p-4">
+    <Card ref={setNodeRef} style={style} className={`${isDragging ? "border-primary" : ""} bg-card`}>
+      <CardHeader className="p-4 bg-muted">
         <div className="flex items-center gap-2">
-          <div {...attributes} {...listeners} className="cursor-grab rounded p-1 hover:bg-muted">
-            <GripVertical className="h-5 w-5 text-muted-foreground" />
+          <div {...attributes} {...listeners} className="cursor-grab rounded p-1 hover:bg-background">
+            <GripVertical className="h-5 w-5 text-foreground" />
           </div>
           <div className="flex-1">
             <Input
@@ -109,14 +111,14 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
               </Button>
             </CollapsibleTrigger>
           </Collapsible>
-          <Button variant="ghost" size="sm" onClick={() => onDelete(section.id)} type="button">
+          <Button variant="ghost" size="sm" onClick={() => onDelete(section._id!)} type="button">
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
         </div>
       </CardHeader>
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
         <CollapsibleContent>
-          <CardContent className="px-4 pb-0 pt-0">
+          <CardContent className="px-4 pb-0 pt-4">
             <Textarea
               placeholder="Section Description (optional)"
               value={description}
@@ -127,7 +129,12 @@ export function SectionCard({ section, onUpdate, onDelete }: SectionCardProps) {
             <div className="space-y-3">
               <div className="text-sm font-medium">Lessons</div>
               {section.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} lesson={lesson} onUpdate={updateLesson} onDelete={deleteLesson} />
+                <LessonCard
+                  key={lesson._id || `temp-lesson-${lesson.order}`}
+                  lesson={lesson}
+                  onUpdate={updateLesson}
+                  onDelete={deleteLesson}
+                />
               ))}
               {section.lessons.length === 0 && (
                 <div className="flex h-20 flex-col items-center justify-center rounded border border-dashed">

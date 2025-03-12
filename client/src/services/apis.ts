@@ -19,3 +19,7 @@ export const courseEndpoints = {
     DELETE_COURSE_API: BASE_URL + "/course/",
     UPDATE_COURSE_API: BASE_URL + "/course/",
 }
+
+export const categoryEndpoints = {
+    GET_ALL_CATEGORIES : BASE_URL + "categories"
+}

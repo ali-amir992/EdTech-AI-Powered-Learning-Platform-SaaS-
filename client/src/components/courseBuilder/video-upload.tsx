@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 
 interface VideoUploadProps {
-  videoUrl: string | null
+  videoUrl?: string | null
   onUpload: (file: File) => void
   isUploading: boolean
   uploadProgress: number
@@ -37,7 +37,7 @@ export function VideoUpload({ videoUrl, onUpload, isUploading, uploadProgress }:
         <div className="space-y-2">
           <video src={videoUrl} controls className="w-full rounded-md" height={180} />
           <div className="flex justify-between">
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} type="button">
               <Upload className="mr-2 h-4 w-4" />
               Replace Video
             </Button>

@@ -1,65 +1,20 @@
-"use client"
+import CourseDetailsForm from "@/components/courseBuilder/CourseBuilderForm";
+import SectionsAndLessonsForm from "@/components/courseBuilder/SectionAndLessonForm";
+import PublishCourse from "@/components/courseBuilder/PublishCourse";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 
-import { CourseBuilder } from "@/components/course-builder/course-builder"
-import type { CourseMetadata, CourseSectionWithLessons } from "@/types/course"
-
-export default function CreateCoursePage() {
-  const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(1)
-  const [courseMetadata, setCourseMetadata] = useState<CourseMetadata>({
-    name: "",
-    description: "",
-    thumbnail: null,
-    price: 0,
-    currency: "USD",
-    category: "",
-  })
-  const [courseSections, setCourseSections] = useState<CourseSectionWithLessons[]>([])
-
-  const handleNextStep = () => {
-    setCurrentStep((prev) => prev + 1)
-  }
-
-  const handlePrevStep = () => {
-    setCurrentStep((prev) => prev - 1)
-  }
-
-  const handleMetadataSubmit = (metadata: CourseMetadata) => {
-    setCourseMetadata(metadata)
-    handleNextStep()
-  }
-
-  const handleSectionsSubmit = (sections: CourseSectionWithLessons[]) => {
-    setCourseSections(sections)
-    handleNextStep()
-  }
-
-  const handlePublishCourse = () => {
-    // In a real app, this would send the data to an API
-    toast.success("Course published successfully!")
-
-    // Simulate API call
-    setTimeout(() => {
-      router.push("/dashboard/courses")
-    }, 2000)
-  }
+const CourseBuilder = () => {
+  const { step } = useSelector((state: RootState) => state.courseBuilder);
 
   return (
-    <div className="container max-w-5xl py-8">
-      <CourseBuilder
-        currentStep={currentStep}
-        courseMetadata={courseMetadata}
-        courseSections={courseSections}
-        onMetadataSubmit={handleMetadataSubmit}
-        onSectionsSubmit={handleSectionsSubmit}
-        onPublishCourse={handlePublishCourse}
-        onPrevStep={handlePrevStep}
-      />
+    <div>
+      {step === 1 && <CourseDetailsForm />}
+      {step === 2 && <SectionsAndLessonsForm />}
+      {step === 3 && <PublishCourse />}
     </div>
-  )
-}
+  );
+};
 
+export default CourseBuilder;

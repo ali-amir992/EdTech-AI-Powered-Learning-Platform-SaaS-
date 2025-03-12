@@ -1,9 +1,5 @@
-"use client"
-
 import type React from "react"
-
 import { useState } from "react"
-import Image from "next/image"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { DollarSign, ImageIcon } from "lucide-react"
@@ -33,6 +29,7 @@ const formSchema = z.object({
     message: "Please select a language.",
   }),
   status: z.enum(["Draft", "Published"]),
+  root: z.string().optional(),
 })
 
 interface Step1CourseDetailsProps {
@@ -252,11 +249,11 @@ export function Step1CourseDetails({ initialData, onSubmit }: Step1CourseDetails
                         onClick={() => document.getElementById("thumbnail")?.click()}
                       >
                         {thumbnailPreview ? (
-                          <Image
+                          <img
                             src={thumbnailPreview || "/placeholder.svg"}
                             alt="Thumbnail preview"
-                            fill
-                            className="rounded-lg object-cover"
+                            
+                            className="rounded-lg object-contain  "
                           />
                         ) : (
                           <>
