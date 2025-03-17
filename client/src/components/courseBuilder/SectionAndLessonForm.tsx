@@ -23,7 +23,7 @@ const SectionsAndLessonsForm = () => {
         title: sectionTitle,
         lessons: [],
       };
-      dispatch(addSection(newSection));
+      // dispatch(addSection(newSection));
       setSectionTitle("");
     }
   };
@@ -35,7 +35,7 @@ const SectionsAndLessonsForm = () => {
         title: lessonTitle,
         videoUrl: lessonVideoUrl,
       };
-      dispatch(addLesson({ sectionId: selectedSectionId, lesson: newLesson }));
+      // dispatch(addLesson({ sectionId: selectedSectionId, lesson: newLesson }));
       setLessonTitle("");
       setLessonVideoUrl("");
     }

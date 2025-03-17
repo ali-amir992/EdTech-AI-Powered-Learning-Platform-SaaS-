@@ -72,7 +72,7 @@ const CourseDetailsForm = () => {
         };
     
         // Dispatch the plain object to Redux
-        dispatch(updateCourseDetails(courseDetails)); 
+        // dispatch(updateCourseDetails(courseDetails)); 
     
         // Create FormData only for API submission
         const formData = new FormData();

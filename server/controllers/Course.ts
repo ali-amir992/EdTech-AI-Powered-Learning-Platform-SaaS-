@@ -3,6 +3,7 @@ import Course from "@models/Course";
 import { cloudinaryConnect, cloudinary } from "@config/cloudinary";
 import User from "@models/User";
 import fs from "fs";
+import axios from "axios";
 
 
 export const createCourse = async (req: Request, res: Response) => {
@@ -67,7 +68,16 @@ export const publishCourse = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
 
-        const course = await Course.findById(courseId);
+        const course = await Course.findById(courseId)
+            .populate({
+                path: "sections",
+                populate: {
+                    path: "lessons",
+                    model: "Lesson", // Ensure lessons are properly populated
+                },
+            })
+            .populate("instructor"); // Populate instructor for 'about' field
+
         if (!course) {
             res.status(404).json({ success: false, message: "Course not found" });
             return;
@@ -81,7 +91,32 @@ export const publishCourse = async (req: Request, res: Response) => {
         course.status = "Published";
         await course.save();
 
-        res.json({ success: true, message: "Course published successfully", course });
+        // Send course data to FastAPI
+        const courseData = {
+            course: {
+                title: course.title,
+                description: course.description,
+                language: course.language,
+                category: course.category.toString(), // Convert ObjectId to string
+            },
+            sections: course.sections.map((section: any) => ({
+                title: section.title,
+                lessons: section.lessons.map((lesson: any) => ({
+                    title: lesson.title,
+                    description: lesson.description,
+                    transcript: lesson.transcript || "",
+                })),
+            })),
+            instructor: {
+                about: course.instructor.toString() || "",
+            },
+        };
+
+        // Send course data to FastAPI
+        await axios.post("http://localhost:8000/store-course", courseData);
+
+        res.json({ message: "Course published and embeddings stored!" });
+
     } catch (error) {
         res.status(500).json({ success: false, message: "Failed to publish course" });
     }

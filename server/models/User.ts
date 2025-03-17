@@ -51,6 +51,7 @@ const UserSchema: Schema<IUser> = new Schema(
     about: {
       type: String,
       trim: true,
+
     },
     status: {
       type: String,
