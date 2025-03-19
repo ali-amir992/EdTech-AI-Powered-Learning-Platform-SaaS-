@@ -9,6 +9,7 @@ import UserManagement from '@/components/dashboard/pages/UserManagement'
 import Home from '@/pages/Home'
 import CourseDetail from '@/pages/CourseDetails'
 import { Navbar } from '@/components/common/Navbar'
+import Chat from '@/pages/Chat'
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
         <Route path="/:courseId" element={<CourseDetail />} />
         <Route path="/course-builder" element={<CourseBuilder />} />
 
-
+        <Route path='/chat' element = {<Chat/>}/>
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/users" element={<UserManagement />} />

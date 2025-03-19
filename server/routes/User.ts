@@ -1,5 +1,6 @@
 import { Router, Response, RequestHandler } from "express";
 import { login, signup, sendOTP } from "@controllers/Auth";
+import { getUsers } from "@controllers/Admin";
 import { isAuthenticated, isStudent, isAdmin, isInstructor, AuthRequest } from "@middlewares/Auth";
 import { updateAvatar } from "@controllers/Profile";
 import jwt from "jsonwebtoken";
@@ -54,5 +55,7 @@ router.get("/admin-dashboard", isAuthenticated, isAdmin, ((req: AuthRequest, res
 
 router.put("/updateAvatar", isAuthenticated, updateAvatar);
 
+
+router.get("/", getUsers); 
 
 export default router;
