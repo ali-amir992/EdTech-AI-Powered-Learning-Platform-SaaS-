@@ -1,6 +1,6 @@
 import { CheckCircle } from "lucide-react";
 
-export function WhatYouWillLearn() {
+export default function WhatYouWillLearn() {
   const learningPoints = [
     "Understand the mathematical foundations of machine learning algorithms",
     "Build and train neural networks using PyTorch and TensorFlow",

@@ -1,4 +1,4 @@
-export function WhoThisCourseIsFor() {
+export default function WhoThisCourseIsFor() {
     const targetAudience = [
       "Data scientists looking to deepen their machine learning expertise",
       "Software engineers interested in specializing in AI and ML",

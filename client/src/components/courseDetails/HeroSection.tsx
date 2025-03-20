@@ -7,7 +7,7 @@ interface HeroSectionProps {
   course: ICourse;
 }
 
-export function HeroSection({course} : HeroSectionProps ){
+export default function HeroSection({course} : HeroSectionProps ){
   return (
     <section className="relative">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5">

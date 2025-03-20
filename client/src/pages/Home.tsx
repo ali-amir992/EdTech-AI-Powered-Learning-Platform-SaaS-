@@ -25,7 +25,7 @@ export default function Home() {
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {courses.length > 0 ? (
                         courses.map((course) => (
-                            <Link to={`/${course._id}`} key={course._id}>
+                            <Link to={`/courses/${course._id}`} key={course._id}>
                                 <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                                     {/* Thumbnail Image */}
                                     <div className="aspect-video bg-muted relative">

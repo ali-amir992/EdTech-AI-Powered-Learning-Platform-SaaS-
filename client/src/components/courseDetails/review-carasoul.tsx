@@ -59,7 +59,7 @@ const reviews = [
   },
 ]
 
-export function ReviewCarousel() {
+export default function ReviewCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
 
   const scrollPrev = React.useCallback(() => {

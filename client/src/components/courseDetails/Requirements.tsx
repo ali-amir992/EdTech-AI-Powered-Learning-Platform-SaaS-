@@ -1,4 +1,4 @@
-export function Requirements() {
+export default function Requirements() {
     const requirements = [
       "Basic understanding of Python programming",
       "Familiarity with linear algebra and calculus concepts",

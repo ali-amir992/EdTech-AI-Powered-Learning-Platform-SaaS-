@@ -13,7 +13,7 @@ interface StickyCourseCardProps {
 }
 
 
-export function StickyCourseCard({ course }: StickyCourseCardProps) {
+export default function StickyCourseCard({ course }: StickyCourseCardProps) {
 
   const cart = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();

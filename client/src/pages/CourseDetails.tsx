@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCourseById } from "@/services/operations/Course";
 import { ICourse } from "@/types";
-import {WhatYouWillLearn, HeroSection, Requirements, WhoThisCourseIsFor, InstructorSection, StickyCourseCard } from "@/components/courseDetails";
-import { ReviewCarousel } from "@/components/courseDetails/review-carasoul";
+import {WhatYouWillLearn,ReviewCarousel, HeroSection, Requirements, WhoIsThisCourseFor, InstructorSection, StickyCourseCard } from "@/components/courseDetails";
+// import { ReviewCarousel } from "@/components/courseDetails/review-carasoul";
 import SectionAccordian from "@/components/courseDetails/SectionAccordian";
 import { Loader2 } from "lucide-react";
 
@@ -46,7 +46,7 @@ export default function CoursePage() {
 
             {course ? <SectionAccordian sections={course.sections} /> : null}
             
-            <WhoThisCourseIsFor />
+            <WhoIsThisCourseFor />
             {course ? <InstructorSection instructor = {course?.instructor} /> : null}
             <ReviewCarousel />
           </div>

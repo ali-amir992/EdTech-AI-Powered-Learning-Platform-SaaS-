@@ -1,12 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ICourse } from "@/types";
 import toast from "react-hot-toast";
 
+interface ICartItem {
+    _id: string;
+    title: string;
+    price: number;
+    thumbnail: string; // Store only the thumbnail URL, not File
+}
 interface CartState {
-    items: ICourse[];
+    items: ICartItem[];
     totalPrice: number;
 }
-
 
 
 const loadCartFromLocalStorage = (): CartState => {
@@ -15,6 +19,12 @@ const loadCartFromLocalStorage = (): CartState => {
 };
 
 
+const saveCartToLocalStorage = (state: CartState) => {
+    localStorage.setItem("cart", JSON.stringify({
+        items: state.items,
+        totalPrice: state.totalPrice
+    }));
+};
 
 const initialState: CartState = loadCartFromLocalStorage();
 
@@ -22,43 +32,33 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addToCart: (state, action: PayloadAction<ICourse>) => {
-            const course = action.payload
-
-            const index = state.items.findIndex((item) => item._id === course._id)
-            console.log("Course added", index, course)
-
+        addToCart: (state, action: PayloadAction<ICartItem>) => {
+            const course = action.payload;
+            const index = state.items.findIndex((item) => item._id === course._id);
+        
             if (index >= 0) {
-                //if the course is already in the cart, do not modifify the quantity
-                toast.error("Course already in cart")
-                return
+                toast.error("Course already in cart");
+                return;
             }
-            //If the course is note in the cart, add it to the cart
-            state.items.push(course)
-
+        
+            state.items.push(course);
             state.totalPrice += course.price;
-
-            toast.success("Course aded to the cart")
-            localStorage.setItem("cart", JSON.stringify(state));
+            saveCartToLocalStorage(state);
+            toast.success("Course added to cart");
         },
 
-        removeFromCart: (state, action) => {
-
-            const courseId = action.payload
-            console.log("removed", action.payload, state.items.findIndex((item) => item._id === courseId))
-            const index = state.items.findIndex((item) => item._id === courseId)
+        removeFromCart: (state, action: PayloadAction<string>) => {
+            const courseId = action.payload;
+            const index = state.items.findIndex((item) => item._id === courseId);
+        
             if (index >= 0) {
-                //if the course is found in the items, remove it
-
-                state.totalPrice -= state.items[index].price
-                state.items.splice(index, 1)
-
-                localStorage.setItem("cart", JSON.stringify(state));
-
-                toast.success("couse removed from cart")
-
+                state.totalPrice -= state.items[index].price;
+                state.items.splice(index, 1);
+                saveCartToLocalStorage(state);
+                toast.success("Course removed from cart");
             }
         },
+
         resetCart: (state) => {
             state.items = []
             state.totalPrice = 0;

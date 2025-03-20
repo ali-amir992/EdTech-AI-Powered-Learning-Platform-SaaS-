@@ -6,7 +6,7 @@ import { Award, MessageSquare, Star, Users } from "lucide-react";
 interface InstructorSectionProps {
   instructor : IUser;
 }
-export function InstructorSection({instructor}: InstructorSectionProps) {
+export default function InstructorSection({instructor}: InstructorSectionProps) {
   return (
     <div className="mb-8 rounded-lg border bg-card p-6 shadow-sm">
       <h2 className="mb-4 text-2xl font-bold">Your Instructor</h2>
