@@ -16,7 +16,7 @@ import courseRoutes from "@routes/Course";
 import sectionRoutes from "@routes/Section";
 import ChatMessage from "@models/ChatMessage";
 import chatRoutes from "@routes/ChatMessage"
-
+import paymentRoutes from "@routes/Payment"
 const app = express();
 require("dotenv").config();
 
@@ -64,6 +64,8 @@ app.use("/api/v1/admin", admin);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/chat", chatRoutes)
+app.use("/api/v1/" , paymentRoutes);
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
@@ -73,7 +75,7 @@ app.get("/", (req: Request, res: Response) => {
 const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
+  // console.log("A user connected:", socket.id);
 
   socket.on("join", (userId) => {
     onlineUsers.set(userId, socket.id);
@@ -101,7 +103,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
+    // console.log("A user disconnected:", socket.id);
     for (let [userId, socketId] of onlineUsers.entries()) {
       if (socketId === socket.id) {
         onlineUsers.delete(userId);

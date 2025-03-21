@@ -5,19 +5,45 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Trash } from "lucide-react";
 import { RootState } from "@/store/store";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe("pk_test_51R4faMFvge4mBPBCblYjLwyl9ULVNZMNxchTiP1LF4mVSrQRcgT7NzxrAQgzrx3Ts8s5gAJdqGdiFXgo9kUrJocE00CFEIrbF8"); // Load Stripe with public key
 
 const CartPage: React.FC = () => {
-    
     const dispatch = useDispatch();
     const { items, totalPrice } = useSelector((state: RootState) => state.cart);
+    const { token } = useSelector((state: RootState) => state.auth)
 
     const handleRemove = (id: string) => {
         dispatch(removeFromCart(id));
     };
 
-    const handleCheckout = () => {
-        alert("Proceeding to checkout...");
-        dispatch(resetCart());
+    console.log("token is " , token);
+    const handleCheckout = async () => {
+        try {
+            const stripe = await stripePromise;
+
+            // Send cart items to backend
+            const response = await fetch(`http://localhost:5000/api/v1/create-checkout-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ cartItems: items }),
+            });
+
+            const { url } = await response.json();
+
+            if (url) {
+                window.location.href = url; // Redirect to Stripe Checkout
+                dispatch(resetCart());
+            } else {
+                alert("Payment failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Checkout error:", error);
+        }
     };
 
     return (
