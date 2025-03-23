@@ -12,12 +12,14 @@ import { Navbar } from '@/components/common/Navbar'
 import Chat from '@/pages/Chat'
 import Cart from '@/pages/Cart'
 import Error404 from '@/pages/Error404'
+import LandingPage from '@/pages/LandingPage'
 
 const App = () => {
   return (
     <div>
       <Navbar />
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
