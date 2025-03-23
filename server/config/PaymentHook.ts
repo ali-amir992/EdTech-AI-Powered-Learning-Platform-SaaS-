@@ -9,7 +9,7 @@ require("dotenv").config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
 
 
-router.post("/stripe-webhook", express.raw({ type: "application/json" }), async (req: Request, res: Response) => {
+router.post("/", express.raw({ type: "application/json" }), async (req: Request, res: Response) => {
     const sig = req.headers["stripe-signature"];
     let event;
 

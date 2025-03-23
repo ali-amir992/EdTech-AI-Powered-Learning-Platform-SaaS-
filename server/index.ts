@@ -17,6 +17,7 @@ import sectionRoutes from "@routes/Section";
 import ChatMessage from "@models/ChatMessage";
 import chatRoutes from "@routes/ChatMessage"
 import paymentRoutes from "@routes/Payment"
+import stripeWebhookRouter from "@config/PaymentHook"
 const app = express();
 require("dotenv").config();
 
@@ -32,6 +33,9 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+
+app.use("/api/stripe-webhook", express.raw({ type: "application/json" }), stripeWebhookRouter);
+
 
 app.use(express.json());
 app.use(cookieParser());
