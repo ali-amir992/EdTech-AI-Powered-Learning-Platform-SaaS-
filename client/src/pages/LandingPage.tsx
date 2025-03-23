@@ -3,8 +3,6 @@ import { KeyFeatures } from "@/components/landing/key-features"
 import { PopularCourses } from "@/components/landing/popular-courses"
 import { Testimonials } from "@/components/landing/testimonials"
 import { CtaSection } from "@/components/landing/cta-section"
-import { Footer } from "@/components/landing/footer"
-// import { Navbar } from "@/components/landing/"
 
 export default function LandingPage() {
   return (
@@ -17,7 +15,6 @@ export default function LandingPage() {
         <Testimonials />
         <CtaSection />
       </main>
-      <Footer />
     </div>
   )
 }

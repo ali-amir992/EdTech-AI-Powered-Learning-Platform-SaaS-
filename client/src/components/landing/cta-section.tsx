@@ -19,7 +19,7 @@ export function CtaSection() {
             <Button
               size="lg"
               variant="outline"
-              className="text-base border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+              className="text-base border-primary-foreground/20 text-primary hover:bg-primary-foreground/10 hover:text-primary-foreground"
             >
               Learn More
             </Button>

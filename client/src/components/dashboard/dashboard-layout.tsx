@@ -1,7 +1,7 @@
 import type * as React from "react"
 import { BarChart3, BookOpen, GraduationCap, LayoutDashboard, Settings, User2, Users2 } from "lucide-react"
 import { useSelector } from "react-redux"
-import { RootState } from "@/redux/store"
+import { RootState } from "@/store/store"
 
 // import { usePathname } from "next/navigation"
 import { useLocation } from "react-router-dom";

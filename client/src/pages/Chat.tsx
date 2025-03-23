@@ -4,29 +4,22 @@ import Chat from "@/components/chat/Chat";
 import { IUser } from "@/types/User"; // Adjust the import path as needed
 
 const ChatPage = () => {
-    // Define the type for the `users` state as an array of `IUser`
     const [users, setUsers] = useState<IUser[]>([]);
-
-    // Define the type for the `selectedUser` state as a string (user ID) or null
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                // Fetch users from the API
                 const response = await axios.get<{ success: boolean; users: IUser[] }>(
                     "http://localhost:5000/api/v1/user"
                 );
 
-                // Check if the response contains the `users` array
                 if (response.data.success && Array.isArray(response.data.users)) {
-                    setUsers(response.data.users); // Set the `users` state
+                    setUsers(response.data.users);
                 } else {
                     console.error("Unexpected API response structure:", response.data);
-                    setUsers([]); // Fallback to an empty array
+                    setUsers([]);
                 }
-
-                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
@@ -36,19 +29,39 @@ const ChatPage = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Chats</h2>
-            {/* Map through the users and render buttons */}
-            {users.map((user) => (
+        <div className="flex h-screen bg-gray-100">
+            {/* Sidebar for User List */}
+            <div className="w-1/4 bg-white border-r border-gray-200 p-6 overflow-y-auto">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6">Chats</h2>
+                <div className="space-y-2">
+                    {users.map((user) => (
+                        <button
+                            key={user._id}
+                            onClick={() => setSelectedUser(user._id)}
+                            className={`w-full text-left p-3 rounded-lg transition-all ${
+                                selectedUser === user._id
+                                    ? "bg-primary text-white"
+                                    : "bg-gray-50 hover:bg-gray-100 text-gray-700"
+                            }`}
+                        >
+                            <span className="font-medium">{user.name}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
 
-                <button className="bg-red-700 px-2 mx-3 text-white" key={user._id} 
-                onClick={() => setSelectedUser(user._id)}>
-                    {user.name}
-                </button>
-            ))}
-
-            {/* Render the Chat component if a user is selected */}
-            {selectedUser && <Chat receiverId={selectedUser} />}
+            {/* Chat Window */}
+            <div className="flex-1 flex flex-col">
+                {selectedUser ? (
+                    <Chat receiverId={selectedUser} />
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 text-lg">
+                            Select a user to start chatting
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

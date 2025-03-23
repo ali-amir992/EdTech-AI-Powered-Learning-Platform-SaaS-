@@ -17,6 +17,8 @@ import {
 import { MobileMenu } from "./MobileMenu";
 import { DesktopNavigation } from "./DesktopNavigation";
 import { NotificationIcon } from "./NotificationIcon";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const courseCategories = [
   { id: 1, name: "Web Development" },
@@ -31,7 +33,9 @@ interface NavbarProps {
   isAuthenticated?: boolean;
 }
 
-export function Navbar({ isAuthenticated = true }: NavbarProps) {
+export default function Navbar({ isAuthenticated = true }: NavbarProps) {
+  const {items} = useSelector((state : RootState) => state.cart);
+
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
   return (
@@ -69,7 +73,7 @@ export function Navbar({ isAuthenticated = true }: NavbarProps) {
             <Link to="/cart" aria-label="Shopping cart" className="relative">
               <ShoppingCart className="h-5 w-5" />
               <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                3
+                {items.length}
               </Badge>
               <span className="sr-only">Cart</span>
             </Link>
