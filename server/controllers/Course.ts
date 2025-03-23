@@ -217,3 +217,14 @@ export const getCourseById = async (req: Request, res: Response) => {
     }
 };
 
+export const getEnrolledCourses = async (req : Request, res:Response) => {
+    const { courseIds } = req.body;
+    
+    try {
+      const courses = await Course.find({ _id: { $in: courseIds } }).populate("instructor", "name");
+      console.log("reached here");
+      res.json(courses);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch courses" });
+    }
+  };

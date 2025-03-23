@@ -35,6 +35,7 @@ const io = new Server(server, {
 });
 
 app.use("/api/stripe-webhook", express.raw({ type: "application/json" }), stripeWebhookRouter);
+app.use('/uploads/videos', express.static('uploads/videos'));
 
 
 app.use(express.json());

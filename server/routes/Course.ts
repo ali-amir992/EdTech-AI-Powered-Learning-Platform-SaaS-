@@ -6,6 +6,7 @@ import {
     getAllCourses,
     getCourseById,
     publishCourse,
+    getEnrolledCourses
     
 } from "@controllers/Course";
 import { isAuthenticated, isAdmin, isInstructor, isStudent } from "@middlewares/Auth";
@@ -21,7 +22,7 @@ router.get("/:courseId", getCourseById as RequestHandler); // Get course details
 router.post("/", isAuthenticated, isInstructor, upload.single("thumbnail"), createCourse as RequestHandler); // Create a course
 router.put("/:courseId", isAuthenticated, isInstructor, updateCourse as RequestHandler); // Update course
 router.delete("/:courseId", isAuthenticated, isAdmin, deleteCourse as RequestHandler); // Delete course
-
+router.post("/enrolledCourses", isAuthenticated, getEnrolledCourses as RequestHandler); // Get enrolled courses
 // // ✅ Lesson Management (Instructor Only)
 // router.post("/:courseId/lessons", verifyToken, isInstructor, addLessonToCourse); // Add lesson to course
 
