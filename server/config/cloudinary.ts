@@ -1,4 +1,4 @@
-const cloudinary = require('cloudinary').v2
+import { v2 as cloudinary } from "cloudinary";
 
  const cloudinaryConnect = () => {
     try{
@@ -12,4 +12,4 @@ const cloudinary = require('cloudinary').v2
     }
 }
 
-export default cloudinaryConnect;
+export { cloudinary,cloudinaryConnect};
