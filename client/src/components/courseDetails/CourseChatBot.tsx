@@ -48,41 +48,65 @@ export function CourseChatbot({ courseTitle = "this course" }: CourseChatbotProp
   }, [isOpen])
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return
+    if (!inputValue.trim()) return;
 
-    // Add user message
+    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
       role: "user",
       timestamp: new Date(),
-    }
+    };
 
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue("")
-    setIsLoading(true)
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
+    setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call)
-    setTimeout(() => {
-      const responses = [
-        `I can help you understand the concepts in ${courseTitle}. What specific topic are you struggling with?`,
-        `That's a great question about ${courseTitle}! Let me explain...`,
-        `In ${courseTitle}, this concept is important because it forms the foundation for more advanced topics.`,
-        `I'd recommend reviewing section 3 of ${courseTitle} which covers this in detail.`,
-        `Many students find this challenging at first. Let's break it down step by step.`,
-      ]
+    try {
+      // Send query to FastAPI endpoint
+      const response = await fetch("http://127.0.0.1:8000/ask-course/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: userMessage.content,
+          course_id: courseTitle.toLowerCase().replace(/\s+/g, "_"), // Convert title format
+          // course_id: "mastering_java_programming", 
+        }),
+      });
 
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        content: responses[Math.floor(Math.random() * responses.length)],
-        role: "assistant",
-        timestamp: new Date(),
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Something went wrong");
       }
 
-      setMessages((prev) => [...prev, botMessage])
-      setIsLoading(false)
-    }, 1000)
-  }
+      // Add bot's response to chat
+      const botMessage: Message = {
+        id: Date.now().toString(),
+        content: data.answer, // Extract AI response
+        role: "assistant",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          content: "Sorry, I'm having trouble answering your question right now.",
+          role: "assistant",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -147,8 +171,9 @@ export function CourseChatbot({ courseTitle = "this course" }: CourseChatbotProp
             </div>
           </div>
 
+        
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-4 max-h-[400px] overflow-y-auto">
             <div className="flex flex-col gap-4">
               {messages.map((message) => (
                 <div

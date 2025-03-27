@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import Course from "@models/Course";
+import { ICourse } from "@models/Course";
 import { cloudinaryConnect, cloudinary } from "@config/cloudinary";
 import User from "@models/User";
+import { ISection } from "@models/Section";
+import { ILesson } from "@models/Lesson";
 import fs from "fs";
 import axios from "axios";
 
@@ -63,7 +66,7 @@ export const createCourse = async (req: Request, res: Response) => {
     }
 };
 
-// ✅ 2. Publish Course (Only instructor can publish)
+//  Publish Course (Only instructor can publish)
 export const publishCourse = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
@@ -76,7 +79,9 @@ export const publishCourse = async (req: Request, res: Response) => {
                     model: "Lesson", // Ensure lessons are properly populated
                 },
             })
-            .populate("instructor"); // Populate instructor for 'about' field
+            .populate("category")
+            .populate("instructor") as ICourse; // Populate instructor for 'about' field
+
 
         if (!course) {
             res.status(404).json({ success: false, message: "Course not found" });
@@ -92,25 +97,30 @@ export const publishCourse = async (req: Request, res: Response) => {
         await course.save();
 
         // Send course data to FastAPI
+        const courseObject = course.toObject();
+        
         const courseData = {
             course: {
-                title: course.title,
-                description: course.description,
-                language: course.language,
-                category: course.category.toString(), // Convert ObjectId to string
+                title: courseObject.title,
+                description: courseObject.description,
+                language: courseObject.language || "English", 
+                category: courseObject.category?.name || "Unknown Category", // Convert ObjectId to string
             },
-            sections: course.sections.map((section: any) => ({
+            sections: courseObject.sections.map((section: any) => ({
                 title: section.title,
                 lessons: section.lessons.map((lesson: any) => ({
                     title: lesson.title,
                     description: lesson.description,
-                    transcript: lesson.transcript || "",
+                    transcript: lesson.transcript || "", // Ensure transcript exists
                 })),
             })),
             instructor: {
-                about: course.instructor.toString() || "",
+                about: courseObject.instructor.about || "",
             },
         };
+
+        // console.log("Sending course data to FastAPI", courseData);
+        console.log("Sending full course data to FastAPI:", JSON.stringify(courseData, null, 2));
 
         // Send course data to FastAPI
         await axios.post("http://localhost:8000/store-course", courseData);
@@ -217,14 +227,14 @@ export const getCourseById = async (req: Request, res: Response) => {
     }
 };
 
-export const getEnrolledCourses = async (req : Request, res:Response) => {
+export const getEnrolledCourses = async (req: Request, res: Response) => {
     const { courseIds } = req.body;
-    
+
     try {
-      const courses = await Course.find({ _id: { $in: courseIds } }).populate("instructor", "name");
-      console.log("reached here");
-      res.json(courses);
+        const courses = await Course.find({ _id: { $in: courseIds } }).populate("instructor", "name");
+        console.log("reached here");
+        res.json(courses);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch courses" });
+        res.status(500).json({ error: "Failed to fetch courses" });
     }
-  };
+};
